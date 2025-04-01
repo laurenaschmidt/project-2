@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Collection</title>
+</head>
+<body>
+    <h1>My Collection</h1>
+    <ul>
+        {% for pokemon in collection.pokemon.all %}
+            <li>{{ pokemon.name }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

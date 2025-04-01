@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Pokémon</title>
+</head>
+<body>
+    <h1>All Pokémon</h1>
+    <ul>
+        {% for pokemon in pokemons %}
+            <li>{{ pokemon.name }} ({{ pokemon.type }})</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>
