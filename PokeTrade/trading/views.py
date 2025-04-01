@@ -31,3 +31,15 @@ def wishlist(request):
 def leaderboard(request):
     leaders = Leaderboard.objects.order_by('-score')[:5]
     return render(request, 'trading/leaderboard.html', {'leaders': leaders})
+
+def profile(request):
+    return render(request, 'trading/profile.html')
+
+def trade(request):
+    return render(request, 'trading/trade.html')
+
+def sale(request):
+    return render(request, 'trading/sale.html')
+
+def notifications(request):
+    return render(request, 'trading/notifications.html')
