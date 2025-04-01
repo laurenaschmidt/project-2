@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 class Pokemon(models.Model):
     name = models.CharField(max_length=100)
     number = models.IntegerField(unique=True)
-    type = models.CharField(max_length=100, null=True, blank=True)
-    image_url = models.URLField(null=True, blank=True)  # Store image URL from PokéAPI
+    type = models.CharField(max_length=100)  # Store as a comma-separated string
+    image = models.URLField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
