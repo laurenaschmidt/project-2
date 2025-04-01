@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Trades</title>
+</head>
+<body>
+    <h1>Active Trades</h1>
+    <ul>
+        {% for trade in trades %}
+            <li>
+                {{ trade.sender.user.username }} is offering {{ trade.pokemon_offered }} for {{ trade.receiver.user.username }}'s {{ trade.pokemon_requested }} - Status: {{ trade.status }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

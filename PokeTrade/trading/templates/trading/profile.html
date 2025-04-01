@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>PokeTrade - Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user_profile.user.username }}'s Profile</title>
 </head>
 <body>
-    <h1>{{ user.username }}'s Profile</h1>
-    <h2>Your Pokémon Collection</h2>
-    <!-- Display user's Pokémon collection here -->
+    <h1>{{ user_profile.user.username }}'s Profile</h1>
+    <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+    <p><strong>Avatar:</strong> <img src="{{ user_profile.avatar.url }}" alt="Avatar" /></p>
 
-   <h2>Your Wishlist</h2>
+    <h2>Your Trades:</h2>
     <ul>
-        {% for pokemon in wishlist %}
-            <li>{{ pokemon.name }}</li>
-        {% endfor %}
-    </ul>
-
-    <h2>Your Favorites</h2>
-    <ul>
-        {% for pokemon in favorites %}
-            <li>{{ pokemon.name }}</li>
+        {% for trade in user_trades %}
+            <li>
+                {% if trade.sender == user_profile %}
+                    Trade with {{ trade.receiver.user.username }} - Status: {{ trade.status }}
+                {% else %}
+                    Trade with {{ trade.sender.user.username }} - Status: {{ trade.status }}
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 </body>

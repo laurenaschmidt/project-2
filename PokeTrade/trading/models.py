@@ -32,8 +32,8 @@ class Collection(models.Model):
 class Trade(models.Model):
     sender = models.ForeignKey(UserProfile, related_name='sent_trades', on_delete=models.CASCADE)
     receiver = models.ForeignKey(UserProfile, related_name='received_trades', on_delete=models.CASCADE)
-    pokemon_offered = models.CharField(max_length=100)
-    pokemon_requested = models.CharField(max_length=100)
+    pokemon_offered = models.ManyToManyField(Pokemon, related_name='offered_in_trades')
+    pokemon_requested = models.ManyToManyField(Pokemon, related_name='requested_in_trades')
     status = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True)
 

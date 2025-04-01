@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
@@ -69,3 +69,23 @@ def notifications(request):
     user_notifications = Notification.objects.filter(user=request.user)
     context = {'user_notifications': user_notifications}
     return render(request, 'trading/notifications.html')
+
+
+def user_profile(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    user_trades = Trade.objects.filter(sender=user_profile) | Trade.objects.filter(receiver=user_profile)
+
+    context = {
+        'user_profile': user_profile,
+        'user_trades': user_trades,
+    }
+    return render(request, 'trading/profile.html', context)
+
+
+def trade_list(request):
+    # Display a list of trades, can be filtered or sorted as needed
+    trades = Trade.objects.all()
+    context = {
+        'trades': trades
+    }
+    return render(request, 'trading/trade_list.html', context)
