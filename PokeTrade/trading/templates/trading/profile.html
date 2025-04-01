@@ -8,10 +8,18 @@
     <h2>Your Pokémon Collection</h2>
     <!-- Display user's Pokémon collection here -->
 
-    <h2>Wishlist</h2>
-    <!-- Display user's wishlist here -->
+   <h2>Your Wishlist</h2>
+    <ul>
+        {% for pokemon in wishlist %}
+            <li>{{ pokemon.name }}</li>
+        {% endfor %}
+    </ul>
 
-    <h2>Favorites</h2>
-    <!-- Display user's favorites here -->
+    <h2>Your Favorites</h2>
+    <ul>
+        {% for pokemon in favorites %}
+            <li>{{ pokemon.name }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
