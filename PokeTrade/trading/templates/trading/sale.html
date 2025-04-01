@@ -5,7 +5,10 @@
 </head>
 <body>
     <h1>Pokémon Marketplace</h1>
-    <h2>Available Pokémon for Sale</h2>
-    <!-- Display Pokémon listings for sale -->
+    <ul>
+        {% for sale in pokemons_for_sale %}
+            <li>{{ sale.pokemon.name }} - Seller: {{ sale.seller.username }} - Price: {{ sale.price }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

@@ -5,6 +5,10 @@
 </head>
 <body>
     <h1>Your Notifications</h1>
-    <!-- Display user notifications -->
+    <ul>
+        {% for notification in user_notifications %}
+            <li>{{ notification.message }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
