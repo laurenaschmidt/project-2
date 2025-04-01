@@ -1,0 +1,17 @@
+<!-- trading/templates/trading/pokemon_detail.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ pokemon.name }}</title>
+</head>
+<body>
+    {% if pokemon %}
+        <h1>{{ pokemon.name }} (#{{ pokemon.number }})</h1>
+        <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+        <p>Type: {{ pokemon.type|join:", " }}</p>
+    {% else %}
+        <p>Pokémon not found!</p>
+    {% endif %}
+</body>
+</html>

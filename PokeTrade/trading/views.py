@@ -5,6 +5,9 @@ from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leader
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
+from .utils import fetch_pokemon
+
+
 @login_required
 def home(request):
     pokemons_for_sale = Sale.objects.all()
@@ -17,6 +20,9 @@ def pokemon_list(request):
     pokemons = Pokemon.objects.all()
     return render(request, 'trading/pokemon_list.html', {'pokemons': pokemons})
 
+def pokemon_detail(request, pokemon_name):
+    pokemon_data = fetch_pokemon(pokemon_name)
+    return render(request, 'trading/pokemon_detail.html', {'pokemon': pokemon_data})
 
 @login_required
 def user_collection(request):

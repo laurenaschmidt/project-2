@@ -15,4 +15,5 @@ urlpatterns = [
     path('notifications/', views.notifications, name='notifications'),
     path('profile/', views.user_profile, name='user_profile'),
     path('trades/', views.trade_list, name='trade_list'),
+    path('pokemon/<str:pokemon_name>/', views.pokemon_detail, name='pokemon_detail'),
 ]
