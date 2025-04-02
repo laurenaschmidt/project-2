@@ -1,0 +1,52 @@
+<!-- marketplace.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Marketplace</title>
+</head>
+<body>
+    <h1>Welcome to the Pokémon Marketplace!</h1>
+
+    <div>
+        <h2>Available Pokémon for Sale</h2>
+        <ul>
+            {% for sale in sales %}
+                <li>
+                    <img src="{{ sale.pokemon.image }}" alt="{{ sale.pokemon.name }}">
+                    <h3>{{ sale.pokemon.name }} (#{{ sale.pokemon.number }})</h3>
+                    <p>Price: ${{ sale.price }}</p>
+                    <p>Type: {{ sale.pokemon.type }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h2>Available Pokémon for Trade</h2>
+        <ul>
+            {% for trade in trades %}
+                <li>
+                    <img src="{{ trade.pokemon_offered.first.image }}" alt="{{ trade.pokemon_offered.first.name }}">
+                    <h3>{{ trade.pokemon_offered.first.name }} (#{{ trade.pokemon_offered.first.number }})</h3>
+                    <p>Status: {{ trade.status }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h2>All Pokémon</h2>
+        <ul>
+            {% for pokemon in available_pokemon %}
+                <li>
+                    <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+                    <h3>{{ pokemon.name }} (#{{ pokemon.number }})</h3>
+                    <p>Type: {{ pokemon.type }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

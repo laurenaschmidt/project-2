@@ -1,0 +1,15 @@
+<!-- pokemon_detail.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ pokemon.name }}</title>
+</head>
+<body>
+    <h1>{{ pokemon.name }}</h1>
+    <p>Number: {{ pokemon.number }}</p>
+    <p>Type: {{ pokemon.type }}</p>
+    {% if pokemon.image %}
+        <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
+    {% endif %}
+</body>
+</html>

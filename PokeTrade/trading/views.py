@@ -1,9 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
+from .utils import fetch_pokemon
+
+
 
 @login_required
 def home(request):
@@ -12,16 +16,36 @@ def home(request):
     return render(request, 'trading/home.html')
 
 
+def import_pokemon(request, pokemon_name):
+    data = fetch_pokemon(pokemon_name)
+
+    if data:
+        pokemon, created = Pokemon.objects.get_or_create(
+            name=data['name'].capitalize(),
+            number=data['id'],
+            type=', '.join([t['type']['name'].capitalize() for t in data['types']]),
+            image=data['sprites']['front_default'] if data['sprites']['front_default'] else None
+        )
+        if created:
+            pokemon.save()
+        return redirect('pokemon_detail', pokemon_name=pokemon_name)
+    else:
+        return render(request, 'trading/error.html', {'message': 'Pokemon not found'})
+
 @login_required
 def pokemon_list(request):
     pokemons = Pokemon.objects.all()
     return render(request, 'trading/pokemon_list.html', {'pokemons': pokemons})
 
+def pokemon_detail(request, pokemon_name):
+    pokemon_data = fetch_pokemon(pokemon_name)
+    return render(request, 'trading/pokemon_detail.html', {'pokemon': pokemon_data})
 
 @login_required
 def user_collection(request):
     collection = Collection.objects.get(user=request.user)
     return render(request, 'trading/collection.html', {'collection': collection})
+
 
 
 @login_required
@@ -50,6 +74,19 @@ def profile(request):
     }
     return render(request, 'trading/profile.html', context)
 
+def marketplace(request):
+    # Get all available Pokémon
+    available_pokemon = Pokemon.objects.all()
+
+    # If you want to filter the list by sale or trade status, you can add filtering logic here
+    sales = Sale.objects.filter(available=True)
+    trades = Trade.objects.filter(status='Pending')
+
+    return render(request, 'trading/marketplace.html', {
+        'available_pokemon': available_pokemon,
+        'sales': sales,
+        'trades': trades
+    })
 
 def trade(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
