@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 
 
-
 class Pokemon(models.Model):
     name = models.CharField(max_length=100)
     number = models.IntegerField(unique=True)
@@ -15,9 +14,11 @@ class Pokemon(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
+    favorite_pokemon = models.ForeignKey(Pokemon, on_delete=models.SET_NULL, null=True, blank=True, related_name='favorited_by')
     collection = models.ManyToManyField(Pokemon, related_name='collected_by', blank=True)
     wishlist = models.ManyToManyField(Pokemon, related_name='wishlist_by', blank=True)
-    favorites = models.ManyToManyField(Pokemon, related_name='favorited_by', blank=True)
 
     def __str__(self):
         return self.user.username

@@ -13,9 +13,10 @@ urlpatterns = [
     path('trade/', views.trade, name='trade'),
     path('sale/', views.sale, name='sale'),
     path('notifications/', views.notifications, name='notifications'),
-    path('profile/', views.user_profile, name='user_profile'),
+    path('profile/', views.profile, name='profile'),
     path('trades/', views.trade_list, name='trade_list'),
     path('import/<str:pokemon_name>/', views.import_pokemon, name='import_pokemon'),
     path('pokemon/<str:pokemon_name>/', views.pokemon_detail, name='pokemon_detail'),
     path('marketplace/', views.marketplace, name='marketplace'),
+    path('update_profile/', views.update_profile, name='update_profile'),
 ]

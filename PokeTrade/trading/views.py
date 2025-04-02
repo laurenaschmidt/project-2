@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
+from .forms import UserProfileForm
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
 from django.contrib.auth.decorators import login_required
@@ -62,17 +63,24 @@ def leaderboard(request):
 
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    collection = user_profile.collection.all()
-    wishlist = user_profile.wishlist.all()
-    favorites = user_profile.favorites.all()
-
-    context = {
-        'user_profile': user_profile,
-        'collection': collection,
-        'wishlist': wishlist,
-        'favorites': favorites,
-    }
+    context = {'user_profile': user_profile}
     return render(request, 'trading/profile.html', context)
+
+
+@login_required
+def update_profile(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('trading:profile')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    context = {'form': form}
+    return render(request, 'trading/update_profile.html', context)
 
 def marketplace(request):
     available_sales = Sale.objects.filter(available=True)
@@ -81,7 +89,6 @@ def marketplace(request):
 def trade(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    # Get trades where the user is either the sender or the receiver
     user_trades = Trade.objects.filter(sender=user_profile) | Trade.objects.filter(receiver=user_profile)
 
     return render(request, 'trading/trade.html', {'trades': user_trades})

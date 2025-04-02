@@ -1,26 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user_profile.user.username }}'s Profile</title>
-</head>
-<body>
-    <h1>{{ user_profile.user.username }}'s Profile</h1>
-    <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
-    <p><strong>Avatar:</strong> <img src="{{ user_profile.avatar.url }}" alt="Avatar" /></p>
 
-    <h2>Your Trades:</h2>
-    <ul>
-        {% for trade in user_trades %}
-            <li>
-                {% if trade.sender == user_profile %}
-                    Trade with {{ trade.receiver.user.username }} - Status: {{ trade.status }}
-                {% else %}
-                    Trade with {{ trade.sender.user.username }} - Status: {{ trade.status }}
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% block content %}
+    <h1>{{ request.user.username }}'s Profile</h1>
+
+    {% if user_profile.profile_picture %}
+        <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;">
+    {% else %}
+        <p>No profile picture uploaded.</p>
+    {% endif %}
+
+    <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+
+    {% if user_profile.favorite_pokemon %}
+        <p><strong>Favorite Pokémon:</strong> {{ user_profile.favorite_pokemon.name }}</p>
+    {% else %}
+        <p>You haven't selected a favorite Pokémon yet.</p>
+    {% endif %}
+<a href="{% url 'trading:update_profile' %}">Edit Profile</a>
+{% endblock %}
