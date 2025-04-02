@@ -1,6 +1,5 @@
-<!-- marketplace.html -->
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'trading/base.html' %}
+{% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,29 +23,21 @@
     </div>
 
     <div>
-        <h2>Available Pokémon for Trade</h2>
-        <ul>
-            {% for trade in trades %}
-                <li>
-                    <img src="{{ trade.pokemon_offered.first.image }}" alt="{{ trade.pokemon_offered.first.name }}">
-                    <h3>{{ trade.pokemon_offered.first.name }} (#{{ trade.pokemon_offered.first.number }})</h3>
-                    <p>Status: {{ trade.status }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <div>
-        <h2>All Pokémon</h2>
-        <ul>
-            {% for pokemon in available_pokemon %}
-                <li>
-                    <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
-                    <h3>{{ pokemon.name }} (#{{ pokemon.number }})</h3>
-                    <p>Type: {{ pokemon.type }}</p>
-                </li>
-            {% endfor %}
-        </ul>
+        <h1>Available Pokémon for Purchase</h1>
+  <div class="pokemon-list">
+    {% for sale in available_sales %}
+      <div class="pokemon-item" style="border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 10px;">
+        <h2>{{ sale.pokemon.name }}</h2>
+        <p>Type: {{ sale.pokemon.type }}</p>
+        <p>Price: ${{ sale.price }}</p>
+        <p>Seller: {{ sale.seller.username }}</p>
+        {% if sale.pokemon.image %}
+          <img src="{{ sale.pokemon.image.url }}" alt="{{ sale.pokemon.name }}" style="width: 150px; height: 150px;">
+        {% endif %}
+        <button style="padding: 5px 10px; margin-top: 10px;">Buy Now</button>
+      </div>
+    {% endfor %}
+  </div>
     </div>
 </body>
-</html>
+{% endblock %}

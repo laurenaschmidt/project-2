@@ -1,6 +1,5 @@
-<!-- pokemon_detail.html -->
-<!DOCTYPE html>
-<html>
+{% extends 'trading/base.html' %}
+{% block content %}
 <head>
     <title>{{ pokemon.name }}</title>
 </head>
@@ -12,4 +11,4 @@
         <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
     {% endif %}
 </body>
-</html>
+{% endblock %}

@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends 'trading/base.html' %}
+{% block content %}
 <head>
     <title>My Collection</title>
 </head>
@@ -12,4 +12,4 @@
     </ul>
     <a href="{% url 'home' %}">Back to Home</a>
 </body>
-</html>
+{% endblock %}

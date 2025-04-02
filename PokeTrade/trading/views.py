@@ -1,5 +1,8 @@
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, get_object_or_404, redirect
 
+from .forms import UserProfileForm
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
 from django.contrib.auth.decorators import login_required
@@ -8,8 +11,7 @@ from django.contrib.auth.models import User
 from .utils import fetch_pokemon
 
 
-
-@login_required
+@login_required(login_url='/signup')
 def home(request):
     pokemons_for_sale = Sale.objects.all()
     context = {'pokemons_for_sale': pokemons_for_sale}
@@ -54,44 +56,38 @@ def wishlist(request):
     return render(request, 'trading/wishlist.html', {'wishlist': wishlist})
 
 
-@login_required
 def leaderboard(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     leaderboard_entries = LeaderboardEntry.objects.all().order_by('-score')
     return render(request, 'trading/leaderboard.html', {'leaderboard_entries': leaderboard_entries})
 
+@login_required(login_url='/signup')
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    collection = user_profile.collection.all()
-    wishlist = user_profile.wishlist.all()
-    favorites = user_profile.favorites.all()
-
-    context = {
-        'user_profile': user_profile,
-        'collection': collection,
-        'wishlist': wishlist,
-        'favorites': favorites,
-    }
+    context = {'user_profile': user_profile}
     return render(request, 'trading/profile.html', context)
 
+
+@login_required
+def update_profile(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('trading:profile')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'trading/update_profile.html', {'form': form})
+
 def marketplace(request):
-    # Get all available Pokémon
-    available_pokemon = Pokemon.objects.all()
+    available_sales = Sale.objects.filter(available=True)
+    return render(request, 'trading/marketplace.html', {'available_sales': available_sales})
 
-    # If you want to filter the list by sale or trade status, you can add filtering logic here
-    sales = Sale.objects.filter(available=True)
-    trades = Trade.objects.filter(status='Pending')
-
-    return render(request, 'trading/marketplace.html', {
-        'available_pokemon': available_pokemon,
-        'sales': sales,
-        'trades': trades
-    })
-
+@login_required(login_url='/signup')
 def trade(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    # Get trades where the user is either the sender or the receiver
     user_trades = Trade.objects.filter(sender=user_profile) | Trade.objects.filter(receiver=user_profile)
 
     return render(request, 'trading/trade.html', {'trades': user_trades})
@@ -126,3 +122,16 @@ def trade_list(request):
         'trades': trades
     }
     return render(request, 'trading/trade_list.html', context)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log the user in right after signup
+            return redirect('trading:home')  # Redirect to the profile page or wherever you prefer
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'trading/signup.html', {'form': form})

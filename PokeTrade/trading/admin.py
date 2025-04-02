@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import (
     Pokemon, Collection, Trade, Sale, WishList,
     Favorite, TradeHistory, Release, Leaderboard,
-    Notification, Analytics
+    Notification, Analytics, UserProfile
 )
 
 admin.site.register(Pokemon)
@@ -17,3 +17,4 @@ admin.site.register(Release)
 admin.site.register(Leaderboard)
 admin.site.register(Notification)
 admin.site.register(Analytics)
+admin.site.register(UserProfile)
