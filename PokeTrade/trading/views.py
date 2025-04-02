@@ -75,18 +75,8 @@ def profile(request):
     return render(request, 'trading/profile.html', context)
 
 def marketplace(request):
-    # Get all available Pokémon
-    available_pokemon = Pokemon.objects.all()
-
-    # If you want to filter the list by sale or trade status, you can add filtering logic here
-    sales = Sale.objects.filter(available=True)
-    trades = Trade.objects.filter(status='Pending')
-
-    return render(request, 'trading/marketplace.html', {
-        'available_pokemon': available_pokemon,
-        'sales': sales,
-        'trades': trades
-    })
+    available_sales = Sale.objects.filter(available=True)
+    return render(request, 'trading/marketplace.html', {'available_sales': available_sales})
 
 def trade(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
