@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends 'trading/base.html' %}
+{% block content %}
 <head>
     <title>Sign Up</title>
 </head>
@@ -12,4 +12,4 @@
     </form>
     <p>Already have an account? <a href="{% url 'trading:login' %}">Login here</a>.</p>
 </body>
-</html>
+{% endblock %}

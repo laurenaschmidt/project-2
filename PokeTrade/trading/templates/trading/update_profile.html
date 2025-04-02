@@ -1,3 +1,4 @@
+
 {% block content %}
     <h1>Update Profile</h1>
 
@@ -16,9 +17,10 @@
             {% endfor %}
         </select><br><br>
 
+        {% csrf_token %}
         <label for="profile_picture">Profile Picture:</label>
         <input type="file" name="profile_picture" id="profile_picture"><br><br>
-
+        {% csrf_token %}
         <button type="submit">Update Profile</button>
     </form>
     <a href="{% url 'trading:profile' %}">Cancel</a>

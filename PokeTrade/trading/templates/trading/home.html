@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends 'trading/base.html' %}
+{% block content %}
 <head>
     <title>PokeTrade - Home</title>
 </head>
@@ -28,4 +28,4 @@
     <a href="{% url 'trading:leaderboard' %}">Leaderboard</a>
     <a href="{% url 'trading:notifications' %}">Notifications</a>
 </body>
-</html>
+{% endblock %}

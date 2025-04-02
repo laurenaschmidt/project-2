@@ -56,12 +56,11 @@ def wishlist(request):
     return render(request, 'trading/wishlist.html', {'wishlist': wishlist})
 
 
-
 def leaderboard(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     leaderboard_entries = LeaderboardEntry.objects.all().order_by('-score')
     return render(request, 'trading/leaderboard.html', {'leaderboard_entries': leaderboard_entries})
 
+@login_required(login_url='/signup')
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     context = {'user_profile': user_profile}
@@ -71,7 +70,6 @@ def profile(request):
 @login_required
 def update_profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
@@ -80,13 +78,13 @@ def update_profile(request):
     else:
         form = UserProfileForm(instance=user_profile)
 
-    context = {'form': form}
-    return render(request, 'trading/update_profile.html', context)
+    return render(request, 'trading/update_profile.html', {'form': form})
 
 def marketplace(request):
     available_sales = Sale.objects.filter(available=True)
     return render(request, 'trading/marketplace.html', {'available_sales': available_sales})
 
+@login_required(login_url='/signup')
 def trade(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
@@ -132,7 +130,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # Log the user in right after signup
-            return redirect('profile')  # Redirect to the profile page or wherever you prefer
+            return redirect('trading:home')  # Redirect to the profile page or wherever you prefer
     else:
         form = UserCreationForm()
 
