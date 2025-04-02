@@ -1,16 +1,15 @@
-<!-- trading/templates/trading/pokemon_detail.html -->
+<!-- pokemon_detail.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>{{ pokemon.name }}</title>
 </head>
 <body>
-    {% if pokemon %}
-        <h1>{{ pokemon.name }} (#{{ pokemon.number }})</h1>
-        <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
-        <p>Type: {{ pokemon.type }}</p>
-    {% else %}
-        <p>Pokémon not found!</p>
+    <h1>{{ pokemon.name }}</h1>
+    <p>Number: {{ pokemon.number }}</p>
+    <p>Type: {{ pokemon.type }}</p>
+    {% if pokemon.image %}
+        <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
     {% endif %}
 </body>
 </html>
