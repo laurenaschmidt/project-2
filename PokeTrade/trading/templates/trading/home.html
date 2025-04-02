@@ -5,6 +5,16 @@
 </head>
 <body>
     <h1>Welcome to PokeTrade!</h1>
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }}!</p>
+        <a href="{% url 'trading:profile' %}">Profile</a>
+        <form action="{% url 'trading:logout' %}" method="post">
+     {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+    {% else %}
+        <a href="{% url 'trading:login' %}">Login</a>
+    {% endif %}
      <h2>Pokémon for Sale</h2>
     <ul>
         {% for sale in pokemons_for_sale %}
