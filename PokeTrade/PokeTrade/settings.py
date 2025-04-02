@@ -123,5 +123,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = 'trading:profile'
-LOGOUT_REDIRECT_URL = 'trading:login'
+LOGIN_REDIRECT_URL = 'trading:home'
+LOGOUT_REDIRECT_URL = 'trading:signup'

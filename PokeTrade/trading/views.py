@@ -1,3 +1,5 @@
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import UserProfileForm
@@ -9,8 +11,7 @@ from django.contrib.auth.models import User
 from .utils import fetch_pokemon
 
 
-
-@login_required
+@login_required(login_url='/signup')
 def home(request):
     pokemons_for_sale = Sale.objects.all()
     context = {'pokemons_for_sale': pokemons_for_sale}
@@ -55,7 +56,7 @@ def wishlist(request):
     return render(request, 'trading/wishlist.html', {'wishlist': wishlist})
 
 
-@login_required
+
 def leaderboard(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     leaderboard_entries = LeaderboardEntry.objects.all().order_by('-score')
@@ -123,3 +124,16 @@ def trade_list(request):
         'trades': trades
     }
     return render(request, 'trading/trade_list.html', context)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log the user in right after signup
+            return redirect('profile')  # Redirect to the profile page or wherever you prefer
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'trading/signup.html', {'form': form})

@@ -13,6 +13,7 @@
         <button type="submit">Logout</button>
     </form>
     {% else %}
+        <a href="{% url 'trading:signup' %}">Sign Up</a>
         <a href="{% url 'trading:login' %}">Login</a>
     {% endif %}
      <h2>Pokémon for Sale</h2>
