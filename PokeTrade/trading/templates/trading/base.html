@@ -12,6 +12,7 @@
         <a href="{% url 'trading:trade' %}">Trading</a> |
         <a href="{% url 'trading:leaderboard' %}">Leaderboard</a> |
         <a href="{% url 'trading:marketplace' %}">Marketplace</a> |
+        <a href="{% url 'trading:notifications' %}">Notifications</a> |
 
         {% if user.is_authenticated %}
             <form action="{% url 'trading:logout' %}" method="post">

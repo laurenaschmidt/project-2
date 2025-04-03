@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, get_object_or_404, redirect
@@ -81,6 +83,10 @@ def update_profile(request):
     return render(request, 'trading/update_profile.html', {'form': form})
 
 def marketplace(request):
+    pokemon_list = Pokemon.objects.all()  # Make sure you have Pokemon objects in your database!
+    context = {
+        'pokemon_list': pokemon_list,
+    }
     available_sales = Sale.objects.filter(available=True)
     return render(request, 'trading/marketplace.html', {'available_sales': available_sales})
 
@@ -98,6 +104,7 @@ def sale(request):
     context = {'pokemons_for_sale': pokemons_for_sale}
     return render(request, 'trading/sale.html')
 
+@login_required(login_url='/signup')
 def notifications(request):
     user_notifications = Notification.objects.filter(user=request.user)
     context = {'user_notifications': user_notifications}
@@ -129,9 +136,24 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user_profile = UserProfile.objects.create(user=user)
+
+            all_pokemon = list(Pokemon.objects.all())
+            random_pokemon = random.sample(all_pokemon, 5)  # Give the user 5 random Pokémon
+
+            user_profile.owned_pokemon.set(random_pokemon)
+            user_profile.save()
             login(request, user)  # Log the user in right after signup
             return redirect('trading:home')  # Redirect to the profile page or wherever you prefer
     else:
         form = UserCreationForm()
 
     return render(request, 'trading/signup.html', {'form': form})
+
+def favorite_pokemon(request, pokemon_id):
+    if request.method == "POST":
+        pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+        favorite, created = Favorite.objects.get_or_create(user=request.user, pokemon=pokemon)
+        if not created:
+            favorite.delete()
+    return redirect('marketplace')

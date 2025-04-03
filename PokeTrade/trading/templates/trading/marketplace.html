@@ -25,6 +25,20 @@
     <div>
         <h1>Available Pokémon for Purchase</h1>
   <div class="pokemon-list">
+      {% for pokemon in pokemon_list %}
+        <div>
+            <h3>{{ pokemon.name }}</h3>
+            <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}">
+
+            <!-- Check if the user has already favorited the Pokémon -->
+            {% if request.user.is_authenticated %}
+                <form action="{% url 'favorite_pokemon' pokemon.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Favorite</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endfor %}
     {% for sale in available_sales %}
       <div class="pokemon-item" style="border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 10px;">
         <h2>{{ sale.pokemon.name }}</h2>
@@ -36,6 +50,11 @@
         {% endif %}
         <button style="padding: 5px 10px; margin-top: 10px;">Buy Now</button>
       </div>
+      {% if request.user.is_authenticated %}
+                    {% csrf_token %}
+                    <button type="submit">Favorite</button>
+                </form>
+            {% endif %}
     {% endfor %}
   </div>
     </div>

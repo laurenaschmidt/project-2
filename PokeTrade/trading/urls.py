@@ -23,4 +23,5 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='trading/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
+    path('favorite/<int:pokemon_id>/', views.favorite_pokemon, name='favorite_pokemon'),
 ]
