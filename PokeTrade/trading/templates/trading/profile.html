@@ -8,6 +8,14 @@
         <p>No profile picture uploaded.</p>
     {% endif %}
 
+    <h2>Owned Pokémon:</h2>
+<ul>
+    {% for pokemon in user_profile.owned_pokemon.all %}
+        <li>{{ pokemon.name }} - ${{ pokemon.price }}</li>
+    {% endfor %}
+</ul>
+
+
     <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
 
     {% if user_profile.favorite_pokemon %}
