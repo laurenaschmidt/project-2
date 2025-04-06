@@ -8,13 +8,18 @@
         <p>No profile picture uploaded.</p>
     {% endif %}
 
-    <h2>Owned Pokémon:</h2>
+   <h2>Owned Pokémon:</h2>
 <ul>
-    {% for pokemon in user_profile.owned_pokemon.all %}
-        <li>{{ pokemon.name }} - ${{ pokemon.price }}</li>
-    {% endfor %}
+  {% for pokemon in user_profile.owned_pokemon.all %}
+    <li class="pokemon-card">
+      <p>{{ pokemon.name }} (ID: {{ pokemon.id }})</p>
+      <form method="post" action="{% url 'trading:remove_pokemon' pokemon.id %}">
+  {% csrf_token %}
+  <button type="submit">Remove {{ pokemon.name }}</button>
+</form>
+    </li>
+  {% endfor %}
 </ul>
-
 
     <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
 

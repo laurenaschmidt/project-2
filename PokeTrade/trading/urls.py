@@ -24,4 +24,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('favorite/<int:pokemon_id>/', views.favorite_pokemon, name='favorite_pokemon'),
+    path('buy/<int:pokemon_id>/', views.buy_pokemon, name='buy_pokemon'),
+    path('remove/<int:pokemon_id>/', views.remove_pokemon, name='remove_pokemon'),
 ]

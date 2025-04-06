@@ -1,10 +1,10 @@
 import random
 
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import UserProfileForm
+from .forms import UserProfileForm, CustomUserCreationForm
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
 from django.contrib.auth.decorators import login_required
@@ -59,8 +59,10 @@ def wishlist(request):
 
 
 def leaderboard(request):
-    leaderboard_entries = LeaderboardEntry.objects.all().order_by('-score')
-    return render(request, 'trading/leaderboard.html', {'leaderboard_entries': leaderboard_entries})
+    top_users = UserProfile.objects.annotate(
+        num_pokemon=Count('owned_pokemon')).order_by('-num_pokemon')[:5]
+
+    return render(request, 'trading/leaderboard.html', {'top_users': top_users})
 
 @login_required(login_url='/signup')
 def profile(request):
@@ -84,11 +86,9 @@ def update_profile(request):
 
 def marketplace(request):
     pokemon_list = Pokemon.objects.all()  # Make sure you have Pokemon objects in your database!
-    context = {
-        'pokemon_list': pokemon_list,
-    }
+    context = {'pokemon_list': pokemon_list,}
     available_sales = Sale.objects.filter(available=True)
-    return render(request, 'trading/marketplace.html', {'available_sales': available_sales})
+    return render(request, 'trading/marketplace.html', context)
 
 @login_required(login_url='/signup')
 def trade(request):
@@ -133,20 +133,24 @@ def trade_list(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user_profile = UserProfile.objects.create(user=user)
+            try:
+                user = form.save()
+                user_profile = UserProfile.objects.create(user=user)
 
-            all_pokemon = list(Pokemon.objects.all())
-            random_pokemon = random.sample(all_pokemon, 5)  # Give the user 5 random Pokémon
+                all_pokemon = list(Pokemon.objects.all())
+                random_pokemon = random.sample(all_pokemon, 5)  # Give the user 5 random Pokémon
 
-            user_profile.owned_pokemon.set(random_pokemon)
-            user_profile.save()
-            login(request, user)  # Log the user in right after signup
-            return redirect('trading:home')  # Redirect to the profile page or wherever you prefer
+                user_profile.owned_pokemon.set(random_pokemon)
+                user_profile.save()
+                login(request, user)  # Log the user in right after signup
+                return redirect('trading:home')
+            except Exception as e:
+                form.add_error('username', 'use a different username')
+                return render(request, 'trading/signup.html', {'form': form})
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
     return render(request, 'trading/signup.html', {'form': form})
 
@@ -156,4 +160,28 @@ def favorite_pokemon(request, pokemon_id):
         favorite, created = Favorite.objects.get_or_create(user=request.user, pokemon=pokemon)
         if not created:
             favorite.delete()
-    return redirect('marketplace')
+    return redirect('trading:marketplace')
+
+
+@login_required
+def buy_pokemon(request, pokemon_id):
+    pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    # Add the Pokémon to the user's owned Pokémon
+    user_profile.owned_pokemon.add(pokemon)
+    user_profile.save()
+
+    return redirect('trading:marketplace')
+
+def remove_pokemon(request, pokemon_id):
+    if not request.user.is_authenticated:
+            return redirect('login')
+            print("🔍 remove_pokemon view called!")
+    if request.method == 'POST':
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+        pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+        user_profile.owned_pokemon.remove(pokemon)
+        return redirect('trading:profile')
+    else:
+        return redirect('trading:profile')

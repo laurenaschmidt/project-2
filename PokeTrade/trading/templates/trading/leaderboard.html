@@ -1,14 +1,9 @@
 {% extends 'trading/base.html' %}
 {% block content %}
-<head>
-    <title>Leaderboard</title>
-</head>
-<body>
-    <h1>Leaderboard</h1>
-    <ul>
-        {% for leader in leaders %}
-            <li>{{ leader.user.username }} - Score: {{ leader.score }}</li>
-        {% endfor %}
-    </ul>
-</body>
+<h1>🏆 Top Traders Leaderboard</h1>
+<ol>
+    {% for user in top_users %}
+        <li>{{ user.user.username }} - {{ user.num_pokemon }} Pokémon</li>
+    {% endfor %}
+</ol>
 {% endblock %}
