@@ -1,10 +1,10 @@
 import random
 
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import UserProfileForm
+from .forms import UserProfileForm, CustomUserCreationForm
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
 from django.contrib.auth.decorators import login_required
@@ -59,8 +59,10 @@ def wishlist(request):
 
 
 def leaderboard(request):
-    leaderboard_entries = LeaderboardEntry.objects.all().order_by('-score')
-    return render(request, 'trading/leaderboard.html', {'leaderboard_entries': leaderboard_entries})
+    top_users = UserProfile.objects.annotate(
+        num_pokemon=Count('owned_pokemon')).order_by('-num_pokemon')[:5]
+
+    return render(request, 'trading/leaderboard.html', {'top_users': top_users})
 
 @login_required(login_url='/signup')
 def profile(request):
@@ -131,20 +133,24 @@ def trade_list(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user_profile = UserProfile.objects.create(user=user)
+            try:
+                user = form.save()
+                user_profile = UserProfile.objects.create(user=user)
 
-            all_pokemon = list(Pokemon.objects.all())
-            random_pokemon = random.sample(all_pokemon, 5)  # Give the user 5 random Pokémon
+                all_pokemon = list(Pokemon.objects.all())
+                random_pokemon = random.sample(all_pokemon, 5)  # Give the user 5 random Pokémon
 
-            user_profile.owned_pokemon.set(random_pokemon)
-            user_profile.save()
-            login(request, user)  # Log the user in right after signup
-            return redirect('trading:home')  # Redirect to the profile page or wherever you prefer
+                user_profile.owned_pokemon.set(random_pokemon)
+                user_profile.save()
+                login(request, user)  # Log the user in right after signup
+                return redirect('trading:home')
+            except Exception as e:
+                form.add_error('username', 'use a different username')
+                return render(request, 'trading/signup.html', {'form': form})
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
     return render(request, 'trading/signup.html', {'form': form})
 
