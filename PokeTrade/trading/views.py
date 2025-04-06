@@ -84,11 +84,9 @@ def update_profile(request):
 
 def marketplace(request):
     pokemon_list = Pokemon.objects.all()  # Make sure you have Pokemon objects in your database!
-    context = {
-        'pokemon_list': pokemon_list,
-    }
+    context = {'pokemon_list': pokemon_list,}
     available_sales = Sale.objects.filter(available=True)
-    return render(request, 'trading/marketplace.html', {'available_sales': available_sales})
+    return render(request, 'trading/marketplace.html', context)
 
 @login_required(login_url='/signup')
 def trade(request):
@@ -156,4 +154,28 @@ def favorite_pokemon(request, pokemon_id):
         favorite, created = Favorite.objects.get_or_create(user=request.user, pokemon=pokemon)
         if not created:
             favorite.delete()
-    return redirect('marketplace')
+    return redirect('trading:marketplace')
+
+
+@login_required
+def buy_pokemon(request, pokemon_id):
+    pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    # Add the Pokémon to the user's owned Pokémon
+    user_profile.owned_pokemon.add(pokemon)
+    user_profile.save()
+
+    return redirect('trading:marketplace')
+
+def remove_pokemon(request, pokemon_id):
+    if not request.user.is_authenticated:
+            return redirect('login')
+            print("🔍 remove_pokemon view called!")
+    if request.method == 'POST':
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+        pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+        user_profile.owned_pokemon.remove(pokemon)
+        return redirect('trading:profile')
+    else:
+        return redirect('trading:profile')
