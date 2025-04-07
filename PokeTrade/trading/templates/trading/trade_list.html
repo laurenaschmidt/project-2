@@ -1,18 +1,63 @@
 {% extends 'trading/base.html' %}
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Trades</title>
-</head>
-<body>
-    <h1>Active Trades</h1>
-    <ul>
-        {% for trade in trades %}
-            <li>
-                {{ trade.sender.user.username }} is offering {{ trade.pokemon_offered }} for {{ trade.receiver.user.username }}'s {{ trade.pokemon_requested }} - Status: {{ trade.status }}
-            </li>
-        {% endfor %}
-    </ul>
-</body>
+<h1>🔁 Pokémon Trades</h1>
+
+<h2>Your Active Trades</h2>
+<ul>
+  {% for trade in user_trades %}
+    <li>
+      You offered {{ trade.pokemon_offered.name }} to {{ trade.receiver.user.username }}
+      for {{ trade.pokemon_requested.name }}
+      {% if not trade.accepted %}
+        - Pending
+      {% else %}
+        - ✅ Accepted
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>No trades yet.</li>
+  {% endfor %}
+</ul>
+
+<h2>Open Trade Offers</h2>
+<ul>
+  {% for trade in available_trades %}
+    <li>
+      {{ trade.sender.user.username }} is offering
+      {{ trade.pokemon_offered.name }} for
+      {{ trade.pokemon_requested.name }}
+      {% if trade.receiver == user_profile and not trade.accepted %}
+      <form method="post" action="{% url 'trading:accept_trade' trade.id %}">
+        {% csrf_token %}
+        <button type="submit">Accept</button>
+      </form>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>No open trades.</li>
+  {% endfor %}
+</ul>
+
+<h2>Create a New Trade</h2>
+<form method="post" action="{% url 'trading:create_trade' %}">
+  {% csrf_token %}
+  <label for="receiver">Trade With:</label>
+  <select name="receiver_id">
+    {% for user in other_users %}
+      <option value="{{ user.id }}">{{ user.user.username }}</option>
+    {% endfor %}
+  </select><br>
+
+  <label for="pokemon_offered">Your Pokémon:</label>
+  <select name="pokemon_offered_id">
+    {% for pokemon in user_profile.owned_pokemon.all %}
+      <option value="{{ pokemon.id }}">{{ pokemon.name }}</option>
+    {% endfor %}
+  </select><br>
+
+  <label for="pokemon_requested">Their Pokémon (name):</label>
+  <input type="text" name="pokemon_requested_name"><br>
+
+  <button type="submit">Send Trade</button>
+</form>
 {% endblock %}
