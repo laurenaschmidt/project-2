@@ -191,7 +191,7 @@ def trade_list(request):
         'other_users': other_users,
     })
 
-@login_required
+
 def create_trade(request):
     if request.method == 'POST':
         sender = get_object_or_404(UserProfile, user=request.user)
