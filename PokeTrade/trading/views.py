@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import UserProfileForm, CustomUserCreationForm
+from .forms import UserProfileForm, CustomSignupForm
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
 from django.contrib.auth.decorators import login_required
@@ -121,28 +121,27 @@ def user_profile(request):
     }
     return render(request, 'trading/profile.html', context)
 
+
 def signup(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomSignupForm(request.POST)
         if form.is_valid():
-            try:
-                user = form.save()
-                user_profile = UserProfile.objects.create(user=user)
+            user = form.save()
+            login(request, user)
+            user_profile, created = UserProfile.objects.get_or_create(user=user)
 
-                all_pokemon = list(Pokemon.objects.all())
-                random_pokemon = random.sample(all_pokemon, 5)  # Give the user 5 random Pokémon
+            all_pokemon = list(Pokemon.objects.all())
+            random_pokemon = random.sample(all_pokemon, k=min(3, len(all_pokemon)))
 
-                user_profile.owned_pokemon.set(random_pokemon)
-                user_profile.save()
-                login(request, user)  # Log the user in right after signup
-                return redirect('trading:home')
-            except Exception as e:
-                form.add_error('username', 'use a different username')
-                return render(request, 'trading/signup.html', {'form': form})
+            for p in random_pokemon:
+                user_profile.owned_pokemon.add(p)
+
+            user_profile.save()
+            return redirect('trading:marketplace')
     else:
-        form = CustomUserCreationForm()
-
+        form = CustomSignupForm()
     return render(request, 'trading/signup.html', {'form': form})
+
 
 def favorite_pokemon(request, pokemon_id):
     if request.method == "POST":
