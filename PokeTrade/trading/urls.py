@@ -11,7 +11,6 @@ urlpatterns = [
     path('wishlist/', views.wishlist, name='wishlist'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('profile/', views.profile, name='profile'),
-    path('trade/', views.trade, name='trade'),
     path('sale/', views.sale, name='sale'),
     path('notifications/', views.notifications, name='notifications'),
     path('profile/', views.profile, name='profile'),
@@ -26,4 +25,8 @@ urlpatterns = [
     path('favorite/<int:pokemon_id>/', views.favorite_pokemon, name='favorite_pokemon'),
     path('buy/<int:pokemon_id>/', views.buy_pokemon, name='buy_pokemon'),
     path('remove/<int:pokemon_id>/', views.remove_pokemon, name='remove_pokemon'),
+    path('trade/', views.trade_list, name='trade_list'),
+    path('create_trade/', views.create_trade, name='create_trade'),
+    path('accept_trade/<int:trade_id>/', views.accept_trade, name='accept_trade'),
+
 ]

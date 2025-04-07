@@ -121,16 +121,6 @@ def user_profile(request):
     }
     return render(request, 'trading/profile.html', context)
 
-
-def trade_list(request):
-    # Display a list of trades, can be filtered or sorted as needed
-    trades = Trade.objects.all()
-    context = {
-        'trades': trades
-    }
-    return render(request, 'trading/trade_list.html', context)
-
-
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -185,3 +175,52 @@ def remove_pokemon(request, pokemon_id):
         return redirect('trading:profile')
     else:
         return redirect('trading:profile')
+
+@login_required
+def trade_list(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    user_trades = Trade.objects.filter(sender=user_profile) | Trade.objects.filter(receiver=user_profile)
+    available_trades = Trade.objects.exclude(sender=user_profile)
+
+    other_users = UserProfile.objects.exclude(id=user_profile.id)
+
+    return render(request, 'trading/trade_list.html', {
+        'user_trades': user_trades,
+        'available_trades': available_trades,
+        'user_profile': user_profile,
+        'other_users': other_users,
+    })
+
+@login_required
+def create_trade(request):
+    if request.method == 'POST':
+        sender = get_object_or_404(UserProfile, user=request.user)
+        receiver = get_object_or_404(UserProfile, id=request.POST.get('receiver_id'))
+        offered = get_object_or_404(Pokemon, id=request.POST.get('pokemon_offered_id'))
+        requested_name = request.POST.get('pokemon_requested_name')
+        requested = get_object_or_404(Pokemon, name__iexact=requested_name)
+
+        trade = Trade.objects.create(
+            sender=sender,
+            receiver=receiver,
+            pokemon_offered=offered,
+            pokemon_requested=requested
+        )
+        return redirect('trading:trade_list')
+
+    return redirect('trading:trade_list')
+
+
+@login_required
+def accept_trade(request, trade_id):
+    trade = get_object_or_404(Trade, id=trade_id)
+    if trade.receiver.user == request.user and not trade.accepted:
+        trade.receiver.owned_pokemon.remove(trade.pokemon_requested)
+        trade.sender.owned_pokemon.remove(trade.pokemon_offered)
+
+        trade.receiver.owned_pokemon.add(trade.pokemon_offered)
+        trade.sender.owned_pokemon.add(trade.pokemon_requested)
+
+        trade.accepted = True
+        trade.save()
+    return redirect('trading:trade_list')
