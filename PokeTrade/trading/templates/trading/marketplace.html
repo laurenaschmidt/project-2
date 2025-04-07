@@ -9,28 +9,14 @@
     <h1>Welcome to the Pokémon Marketplace!</h1>
 
     <div>
-        <h2>Available Pokémon for Sale</h2>
-        <ul>
-            {% for sale in sales %}
-                <li>
-                    <img src="{{ sale.pokemon.image }}" alt="{{ sale.pokemon.name }}">
-                    <h3>{{ sale.pokemon.name }} (#{{ sale.pokemon.number }})</h3>
-                    <p>Price: ${{ sale.price }}</p>
-                    <p>Type: {{ sale.pokemon.type }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <div>
         <h1>Available Pokémon for Purchase</h1>
   <div class="pokemon-list">
       {% for pokemon in pokemon_list %}
         <div>
         <p>{{ pokemon.name }}</p>
-            <img src="{{ sale.pokemon.image }}"
-                    <p>Price: ${{ sale.price }}</p>
-                    <p>Type: {{ sale.pokemon.type }}</p>
+            <img src="{{ pokemon.image }}"
+                    <p>Price: ${{ pokemon.price }}</p>
+                    <p>Type: {{ pokemon.type }}</p>
         <form action="{% url 'trading:favorite_pokemon' pokemon.id %}" method="POST">
             {% csrf_token %}
             <button type="submit">Favorite</button>
