@@ -1,7 +1,7 @@
 import random
 
 from django.contrib.auth import login
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import UserProfileForm, CustomSignupForm
@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from .utils import fetch_pokemon
 
 
-@login_required(login_url='/signup')
+@login_required
 def home(request):
     pokemons_for_sale = Sale.objects.all()
     context = {'pokemons_for_sale': pokemons_for_sale}
@@ -64,7 +64,7 @@ def leaderboard(request):
 
     return render(request, 'trading/leaderboard.html', {'top_users': top_users})
 
-@login_required(login_url='/signup')
+@login_required
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     context = {'user_profile': user_profile}
@@ -84,13 +84,17 @@ def update_profile(request):
 
     return render(request, 'trading/update_profile.html', {'form': form})
 
+@login_required
 def marketplace(request):
-    pokemon_list = Pokemon.objects.all()  # Make sure you have Pokemon objects in your database!
-    context = {'pokemon_list': pokemon_list,}
-    available_sales = Sale.objects.filter(available=True)
-    return render(request, 'trading/marketplace.html', context)
+        search_query = request.GET.get('search', '')
+        if search_query:
+            pokemon_list = Pokemon.objects.filter(Q(name__icontains=search_query))
+        else:
+            pokemon_list = Pokemon.objects.all()
 
-@login_required(login_url='/signup')
+        return render(request, 'trading/marketplace.html', {'pokemon_list': pokemon_list})
+
+@login_required
 def trade(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
@@ -104,7 +108,7 @@ def sale(request):
     context = {'pokemons_for_sale': pokemons_for_sale}
     return render(request, 'trading/sale.html')
 
-@login_required(login_url='/signup')
+@login_required
 def notifications(request):
     user_notifications = Notification.objects.filter(user=request.user)
     context = {'user_notifications': user_notifications}

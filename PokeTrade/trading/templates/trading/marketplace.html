@@ -8,13 +8,18 @@
 <body>
     <h1>Welcome to the Pokémon Marketplace!</h1>
 
+    <form method="GET" action="{% url 'trading:marketplace' %}">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="Search Pokémon..." value="{{ request.GET.search }}">
+        <button type="submit">Search</button>
+</form>
     <div>
         <h1>Available Pokémon for Purchase</h1>
   <div class="pokemon-list">
       {% for pokemon in pokemon_list %}
         <div>
         <p>{{ pokemon.name }}</p>
-            <img src="{{ pokemon.image }}"
+            <img src="{{ pokemon.image }}">
                     <p>Price: ${{ pokemon.price }}</p>
                     <p>Type: {{ pokemon.type }}</p>
         <form action="{% url 'trading:favorite_pokemon' pokemon.id %}" method="POST">
