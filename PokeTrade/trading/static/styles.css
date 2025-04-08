@@ -111,7 +111,8 @@ body {
 }
 
 .home-page .logo {
-  height: 70px;
+  width: 100px;
+  height: auto;
 }
 
 .home-page .home-title {
