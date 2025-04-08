@@ -100,3 +100,87 @@ body {
   text-decoration: none;
   color: #0077cc;
 }
+
+/* HEADER */
+.home-page .home-header {
+  background-color: #ffeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+
+.home-page .logo {
+  height: 70px;
+}
+
+.home-page .home-title {
+  text-align: center;
+}
+
+.home-page .home-title h1 {
+  color: #d62828;
+  font-size: 56px;
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+.home-page .credit-line {
+  font-size: 14px;
+  color: #d62828;
+  margin-top: 4px;
+  font-weight: bold;
+}
+
+.home-page .auth-links {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.home-page .auth-button {
+  background-color: #d62828;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.home-page .auth-button:hover {
+  background-color: #bb1f1f;
+}
+
+/* NAVIGATION */
+.home-page .nav-box {
+  background-color: #eeeeee;
+  padding: 60px 40px;
+  margin: 60px auto;
+  border-radius: 40px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.home-page .nav-button {
+  background-color: #f4c400;
+  color: white;
+  padding: 18px 32px;
+  border-radius: 40px;
+  font-size: 32px;
+  font-weight: bold;
+  text-decoration: none;
+  width: 100%;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.home-page .nav-button:hover {
+  background-color: #e0b300;
+}
+
