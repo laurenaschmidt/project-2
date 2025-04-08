@@ -18,6 +18,9 @@
 
         {% if user.is_authenticated %}
             <form action="{% url 'trading:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
         {% else %}
             <a href="{% url 'trading:login' %}">Login</a>
             <a href="{% url 'trading:signup' %}">Sign Up</a>

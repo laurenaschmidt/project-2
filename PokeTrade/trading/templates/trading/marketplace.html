@@ -8,8 +8,7 @@
 <body>
     <h1>Welcome to the Pokémon Marketplace!</h1>
 
-    <form method="GET" action="{% url 'trading:marketplace' %}">
-        {% csrf_token %}
+    <form method="get" action="{% url 'trading:marketplace' %}">
         <input type="text" name="search" placeholder="Search Pokémon..." value="{{ request.GET.search }}">
         <button type="submit">Search</button>
 </form>
