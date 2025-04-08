@@ -1,0 +1,102 @@
+body {
+  background-color: #f0f0e6;
+  font-family: 'Monaco', monospace;
+}
+
+.profile-container {
+  display: flex;
+  gap: 50px;
+  padding: 40px;
+  justify-content: center;
+}
+
+.left-column {
+  text-align: center;
+  max-width: 350px;
+}
+
+.profile-pic {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #f4c400;
+  background-color: white;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.username {
+  font-size: 28px;
+  color: #d62828;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.bio,
+.favorite,
+.abilities {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.fav-pokemon-img {
+  width: 100px;
+  margin-top: 10px;
+}
+
+.right-column {
+  background-color: #f4c400;
+  padding: 30px;
+  border-radius: 40px;
+}
+
+.collection-header {
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.pokemon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.pokemon-box {
+  background-color: #fff;
+  border-radius: 20px;
+  text-align: center;
+  padding: 10px;
+}
+
+.pokemon-box img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 12px;
+  background-color: #fff;
+}
+
+.pokemon-box p {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.view-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-profile {
+  display: block;
+  text-align: center;
+  margin: 20px auto;
+  font-weight: bold;
+  text-decoration: none;
+  color: #0077cc;
+}

@@ -1,32 +1,45 @@
 {% extends 'trading/base.html' %}
+{% load static %}
 {% block content %}
-    <h1>{{ request.user.username }}'s Profile</h1>
+<div class="profile-container">
+<div class="left-column">
+  {% if user_profile.profile_picture %}
+    <img class="profile-pic" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+  {% else %}
+    <img class="profile-pic" src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
+  {% endif %}
 
-    {% if user_profile.profile_picture %}
-        <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;">
-    {% else %}
-        <p>No profile picture uploaded.</p>
-    {% endif %}
-
-   <h2>Owned Pokémon:</h2>
-<ul>
-  {% for pokemon in user_profile.owned_pokemon.all %}
-    <li class="pokemon-card">
-      <p>{{ pokemon.name }} (ID: {{ pokemon.id }})</p>
-      <form method="post" action="{% url 'trading:remove_pokemon' pokemon.id %}">
-  {% csrf_token %}
-  <button type="submit">Remove {{ pokemon.name }}</button>
-</form>
-    </li>
-  {% endfor %}
-</ul>
-
-    <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+    <h1 class="username">{{ request.user.username|upper }}'S PROFILE</h1>
+    <p class="bio"><strong>Bio:</strong> {{ user_profile.bio }}</p>
 
     {% if user_profile.favorite_pokemon %}
-        <p><strong>Favorite Pokémon:</strong> {{ user_profile.favorite_pokemon.name }}</p>
+      <p class="favorite"><strong>Favorite Pokémon:</strong> {{ user_profile.favorite_pokemon.name }}</p>
+      {% if user_profile.favorite_pokemon.image %}
+        <img class="fav-pokemon-img" src="{{ user_profile.favorite_pokemon.image }}" alt="{{ user_profile.favorite_pokemon.name }}">
+      {% endif %}
+      <p class="abilities">Ability: {{ user_profile.favorite_pokemon.abilities }}</p>
     {% else %}
-        <p>You haven't selected a favorite Pokémon yet.</p>
+      <p>You haven't selected a favorite Pokémon yet.</p>
     {% endif %}
-<a href="{% url 'trading:update_profile' %}">Edit Profile</a>
+  </div>
+
+  <div class="right-column">
+    <h2 class="collection-header">MY COLLECTION</h2>
+    <div class="pokemon-grid">
+      {% for pokemon in user_profile.owned_pokemon.all %}
+        <div class="pokemon-box">
+          {% if pokemon.image %}
+            <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+          {% endif %}
+          <p>{{ pokemon.name }}</p>
+        </div>
+      {% endfor %}
+      <div class="pokemon-box view-more">
+        <p>VIEW MORE</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="edit-profile" href="{% url 'trading:update_profile' %}">Edit Profile</a>
 {% endblock %}
