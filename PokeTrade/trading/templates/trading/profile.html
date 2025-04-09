@@ -12,13 +12,16 @@
     <h1 class="username">{{ request.user.username|upper }}'S PROFILE</h1>
     <p class="bio"><strong>Bio:</strong> {{ user_profile.bio }}</p>
 
-    {% if user_profile.favorite_pokemon %}
-      <p class="favorite"><strong>Favorite Pokémon:</strong> {{ user_profile.favorite_pokemon.name }}</p>
-      {% if user_profile.favorite_pokemon.image %}
-        <img class="fav-pokemon-img" src="{{ user_profile.favorite_pokemon.image }}" alt="{{ user_profile.favorite_pokemon.name }}">
-      {% endif %}
-      <p class="abilities">Ability: {{ user_profile.favorite_pokemon.abilities }}</p>
-    {% else %}
+    {% if user_profile.favorites %}
+      <h2>Favorited Pokémon:</h2>
+<ul>
+    {% for pokemon in user_profile.favorites.all %}
+        <li>{{ pokemon.name }}</li>
+    {% empty %}
+        <li>No favorites yet.</li>
+    {% endfor %}
+</ul>
+
       <p>You haven't selected a favorite Pokémon yet.</p>
     {% endif %}
   </div>

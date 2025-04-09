@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 
+from . import models
 from .forms import UserProfileForm, CustomSignupForm
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
     Notification
@@ -68,8 +69,8 @@ def leaderboard(request):
 @login_required
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    favorites = Favorite.objects.filter(user=request.user)
     owned_pokemon = user_profile.owned_pokemon.all()
-
     type_counts = Counter(pokemon.type for pokemon in owned_pokemon)
     total_owned = owned_pokemon.count()
     unique_types = len(type_counts)
@@ -80,7 +81,8 @@ def profile(request):
     context = {'user_profile': user_profile, 'type_percentages': type_percentages,
         'most_common_type': most_common_type,
         'total_owned': total_owned,
-        'unique_types': unique_types}
+        'unique_types': unique_types,
+        'favorites': favorites}
     return render(request, 'trading/profile.html', context)
 
 
@@ -101,7 +103,7 @@ def update_profile(request):
 def marketplace(request):
         search_query = request.GET.get('search', '')
         if search_query:
-            pokemon_list = Pokemon.objects.filter(Q(name__icontains=search_query))
+            pokemon_list = Pokemon.objects.filter(Q(name__icontains=search_query) | Q(type__icontains=search_query) |Q(id__icontains=search_query))
         else:
             pokemon_list = Pokemon.objects.all()
 
