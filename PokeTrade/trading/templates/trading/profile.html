@@ -37,6 +37,14 @@
       <div class="pokemon-box view-more">
         <p>VIEW MORE</p>
       </div>
+      <p><strong>Total Pokémon Owned:</strong> {{ total_owned }}</p>
+      <p><strong>Unique Types Owned:</strong> {{ unique_types }}</p>
+      <p><strong>Most Common Type:</strong> {{ most_common_type }}</p>
+      <ul>
+      {% for type, percentage in type_percentages.items %}
+      <li>{{ type }}: {{ percentage|floatformat:1 }}%</li>
+      {% endfor %}
+</ul>
     </div>
   </div>
 </div>
