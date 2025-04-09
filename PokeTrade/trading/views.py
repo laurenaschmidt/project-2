@@ -61,7 +61,7 @@ def wishlist(request):
 
 def leaderboard(request):
     top_users = UserProfile.objects.annotate(
-        num_pokemon=Count('owned_pokemon')).order_by('-num_pokemon')[:5]
+        num_pokemon=Count('owned_pokemon')).order_by('-num_pokemon')
 
     return render(request, 'trading/leaderboard.html', {'top_users': top_users})
 
