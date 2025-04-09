@@ -21,6 +21,10 @@
             <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
           {% endif %}
           <p>{{ pokemon.name }}</p>
+          <form method="post" action="{% url 'trading:release_pokemon' pokemon.id %}">
+        {% csrf_token %}
+        <button type="submit">Release</button>
+      </form>
         </div>
       {% endfor %}
       <div class="pokemon-box view-more">

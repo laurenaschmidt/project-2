@@ -183,10 +183,7 @@ def buy_pokemon(request, pokemon_id):
 
     return redirect('trading:marketplace')
 
-def remove_pokemon(request, pokemon_id):
-    if not request.user.is_authenticated:
-            return redirect('login')
-            print("🔍 remove_pokemon view called!")
+def release_pokemon(request, pokemon_id):
     if request.method == 'POST':
         user_profile = get_object_or_404(UserProfile, user=request.user)
         pokemon = get_object_or_404(Pokemon, id=pokemon_id)
