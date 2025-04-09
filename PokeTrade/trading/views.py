@@ -1,4 +1,5 @@
 import random
+from collections import Counter
 
 from django.contrib.auth import login
 from django.db.models import Count, Q
@@ -67,7 +68,19 @@ def leaderboard(request):
 @login_required
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    context = {'user_profile': user_profile}
+    owned_pokemon = user_profile.owned_pokemon.all()
+
+    type_counts = Counter(pokemon.type for pokemon in owned_pokemon)
+    total_owned = owned_pokemon.count()
+    unique_types = len(type_counts)
+    most_common_type = type_counts.most_common(1)[0][0] if type_counts else None
+    type_percentages = {
+        t: (count / total_owned) * 100 for t, count in type_counts.items()
+    } if total_owned else {}
+    context = {'user_profile': user_profile, 'type_percentages': type_percentages,
+        'most_common_type': most_common_type,
+        'total_owned': total_owned,
+        'unique_types': unique_types}
     return render(request, 'trading/profile.html', context)
 
 
