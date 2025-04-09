@@ -7,16 +7,6 @@
         <label for="bio">Bio:</label>
         <textarea name="bio" id="bio">{{ user_profile.bio }}</textarea><br><br>
 
-        <label for="favorite_pokemon">Favorite Pokémon:</label>
-        <select name="favorite_pokemon" id="favorite_pokemon">
-            <option value="">-- Select a Pokémon --</option>
-            {% for pokemon in pokemon_list %}
-                <option value="{{ pokemon.id }}" {% if user_profile.favorite_pokemon == pokemon %}selected{% endif %}>
-                    {{ pokemon.name }}
-                </option>
-            {% endfor %}
-        </select><br><br>
-
         {% csrf_token %}
         <label for="profile_picture">Profile Picture:</label>
         <input type="file" name="profile_picture" id="profile_picture"><br><br>

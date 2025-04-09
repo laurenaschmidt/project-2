@@ -69,7 +69,7 @@ def leaderboard(request):
 @login_required
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    favorites = Favorite.objects.filter(user=request.user)
+    favorites = Favorite.objects.filter(user=request.user).select_related('pokemon')
     owned_pokemon = user_profile.owned_pokemon.all()
     type_counts = Counter(pokemon.type for pokemon in owned_pokemon)
     total_owned = owned_pokemon.count()
@@ -82,7 +82,7 @@ def profile(request):
         'most_common_type': most_common_type,
         'total_owned': total_owned,
         'unique_types': unique_types,
-        'favorites': favorites}
+        'favorites': favorites,}
     return render(request, 'trading/profile.html', context)
 
 
@@ -164,11 +164,12 @@ def signup(request):
 
 def favorite_pokemon(request, pokemon_id):
     if request.method == "POST":
+        user_profile = get_object_or_404(UserProfile, user=request.user)
         pokemon = get_object_or_404(Pokemon, id=pokemon_id)
-        favorite, created = Favorite.objects.get_or_create(user=request.user, pokemon=pokemon)
-        if not created:
-            favorite.delete()
-    return redirect('trading:marketplace')
+        Favorite.objects.create(user=request.user, pokemon=pokemon)
+        user_profile.favorite_pokemon = pokemon
+        user_profile.save()
+        return redirect('trading:profile')
 
 
 @login_required

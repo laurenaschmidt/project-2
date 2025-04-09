@@ -12,20 +12,6 @@
     <h1 class="username">{{ request.user.username|upper }}'S PROFILE</h1>
     <p class="bio"><strong>Bio:</strong> {{ user_profile.bio }}</p>
 
-    {% if user_profile.favorites %}
-      <h2>Favorited Pokémon:</h2>
-<ul>
-    {% for pokemon in user_profile.favorites.all %}
-        <li>{{ pokemon.name }}</li>
-    {% empty %}
-        <li>No favorites yet.</li>
-    {% endfor %}
-</ul>
-
-      <p>You haven't selected a favorite Pokémon yet.</p>
-    {% endif %}
-  </div>
-
   <div class="right-column">
     <h2 class="collection-header">MY COLLECTION</h2>
     <div class="pokemon-grid">
@@ -51,6 +37,14 @@
     </div>
   </div>
 </div>
-
+   <h2>Favorited Pokémon:</h2>
+<ul>
+    {% for fav in favorites %}
+        <li>{{ fav.pokemon.name }}</li>
+    {% empty %}
+        <li>No favorites yet.</li>
+    {% endfor %}
+</ul>
 <a class="edit-profile" href="{% url 'trading:update_profile' %}">Edit Profile</a>
+</div>
 {% endblock %}
