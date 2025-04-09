@@ -249,4 +249,5 @@ def accept_trade(request, trade_id):
 def view_user_profile(request, username):
     user = get_object_or_404(User, username=username)
     user_profile = get_object_or_404(UserProfile, user=user)
-    return render(request, 'trading/view_user_profile.html', {'user_profile': user_profile})
+    favorites = Favorite.objects.filter(user=user).select_related('pokemon')
+    return render(request, 'trading/view_user_profile.html', {'user_profile': user_profile, 'favorites': favorites,})

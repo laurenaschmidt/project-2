@@ -17,7 +17,12 @@
     {% endfor %}
   </ul>
 
-  {% if user_profile.favorite_pokemon %}
-    <p><strong>Favorite Pokémon:</strong> {{ user_profile.favorite_pokemon.name }}</p>
-  {% endif %}
+  <h2>Favorited Pokémon:</h2>
+<ul>
+    {% for fav in favorites %}
+        <li>{{ fav.pokemon.name }}</li>
+    {% empty %}
+        <li>No favorites yet.</li>
+    {% endfor %}
+</ul>
 {% endblock %}
