@@ -30,6 +30,7 @@ urlpatterns = [
     path('trade/', views.trade_list, name='trade_list'),
     path('create_trade/', views.create_trade, name='create_trade'),
     path('accept_trade/<int:trade_id>/', views.accept_trade, name='accept_trade'),
+    path('profile/<str:username>/', views.view_user_profile, name='view_user_profile'),
 
 ]
 
