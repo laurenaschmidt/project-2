@@ -2,8 +2,14 @@
 {% block content %}
 <h1>🏆 Top Traders Leaderboard</h1>
 <ol>
-    {% for user in top_users %}
-        <li>{{ user.user.username }} - {{ user.num_pokemon }} Pokémon</li>
-    {% endfor %}
+    {% for profile in top_users %}
+  {% if profile.user.username %}
+    <li>
+      <a href="{% url 'trading:view_user_profile' profile.user.username %}">
+        {{ profile.user.username }}
+      </a> - {{ profile.owned_pokemon.count }} Pokémon
+    </li>
+  {% endif %}
+{% endfor %}
 </ol>
 {% endblock %}

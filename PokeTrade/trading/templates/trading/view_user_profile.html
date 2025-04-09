@@ -1,0 +1,23 @@
+{% extends 'trading/base.html' %}
+{% block content %}
+  <h1>{{ user_profile.user.username }}'s Profile</h1>
+
+  {% if user_profile.profile_picture %}
+    <img src="{{ user_profile.profile_picture.url }}" style="width: 150px; height: 150px; border-radius: 50%;">
+  {% else %}
+    <p>No profile picture.</p>
+  {% endif %}
+
+  <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+
+  <h3>Owned Pokémon:</h3>
+  <ul>
+    {% for pokemon in user_profile.owned_pokemon.all %}
+      <li>{{ pokemon.name }}</li>
+    {% endfor %}
+  </ul>
+
+  {% if user_profile.favorite_pokemon %}
+    <p><strong>Favorite Pokémon:</strong> {{ user_profile.favorite_pokemon.name }}</p>
+  {% endif %}
+{% endblock %}
