@@ -8,6 +8,9 @@ body {
   gap: 50px;
   padding: 40px;
   justify-content: center;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .left-column {
@@ -49,6 +52,9 @@ body {
   background-color: #f4c400;
   padding: 30px;
   border-radius: 40px;
+  max-width: 700px;
+  width: 100%;
+  flex-grow: 1;
 }
 
 .collection-header {
@@ -73,10 +79,10 @@ body {
 }
 
 .pokemon-box img {
-  width: 80px;
-  height: 80px;
+  width: 110px;
+  height: 110px;
   object-fit: contain;
-  border-radius: 12px;
+  margin-bottom: 8px;
   background-color: #fff;
 }
 
@@ -84,6 +90,11 @@ body {
   font-size: 16px;
   font-weight: bold;
   margin-top: 8px;
+}
+
+.pokemon-box img:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
 }
 
 .view-more {
@@ -185,3 +196,40 @@ body {
   background-color: #e0b300;
 }
 
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.stat-left,
+.stat-right {
+  font-size: 16px;
+}
+
+.favorites-section {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  padding: 0 20px;
+}
+
+.favorites-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.favorites-list {
+  list-style-type: disc;
+  padding-left: 0;
+  margin: 0 auto;
+  display: table;
+  text-align: left;
+}
+
+.favorites-list li {
+  font-size: 16px;
+  margin: 4px 0;
+}

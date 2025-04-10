@@ -2,16 +2,34 @@
 {% load static %}
 {% block content %}
 <div class="profile-container">
-<div class="left-column">
-  {% if user_profile.profile_picture %}
-    <img class="profile-pic" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
-  {% else %}
-    <img class="profile-pic" src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
-  {% endif %}
+
+  <!-- LEFT COLUMN -->
+  <div class="left-column">
+    {% if user_profile.profile_picture %}
+      <img class="profile-pic" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+    {% else %}
+      <img class="profile-pic" src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
+    {% endif %}
 
     <h1 class="username">{{ request.user.username|upper }}'S PROFILE</h1>
     <p class="bio"><strong>Bio:</strong> {{ user_profile.bio }}</p>
 
+    <!-- FAVORITES -->
+    <div class="favorites-section">
+      <h2 class="favorites-title">Favorited Pokémon:</h2>
+      <ul class="favorites-list">
+        {% for fav in favorites %}
+          <li>{{ fav.pokemon.name }}</li>
+        {% empty %}
+          <li>No favorites yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <a class="edit-profile" href="{% url 'trading:update_profile' %}">Edit Profile</a>
+  </div>
+
+  <!-- RIGHT COLUMN -->
   <div class="right-column">
     <h2 class="collection-header">MY COLLECTION</h2>
     <div class="pokemon-grid">
@@ -22,33 +40,34 @@
           {% endif %}
           <p>{{ pokemon.name }}</p>
           <form method="post" action="{% url 'trading:release_pokemon' pokemon.id %}">
-        {% csrf_token %}
-        <button type="submit">Release</button>
-      </form>
+            {% csrf_token %}
+            <button type="submit">Release</button>
+          </form>
         </div>
       {% endfor %}
+
       <div class="pokemon-box view-more">
         <p>VIEW MORE</p>
       </div>
-      <p><strong>Total Pokémon Owned:</strong> {{ total_owned }}</p>
-      <p><strong>Unique Types Owned:</strong> {{ unique_types }}</p>
-      <p><strong>Most Common Type:</strong> {{ most_common_type }}</p>
-      <ul>
+    </div>
+
+    <!-- STATS -->
+  <div class="stats-block">
+    <div class="stat-row">
+      <p class="stat-left"><strong>Total Pokémon Owned:</strong> {{ total_owned }}</p>
+      <p class="stat-right"><strong>Unique Types Owned:</strong> {{ unique_types }}</p>
+    </div>
+    <p><strong>Most Common Type:</strong> {{ most_common_type }}</p>
+    <div class="type-breakdown">
       {% for type, percentage in type_percentages.items %}
-      <li>{{ type }}: {{ percentage|floatformat:1 }}%</li>
+        <div class="type-row">
+          <span class="type-label">{{ type }}</span>
+          <span class="type-percent">{{ percentage|floatformat:1 }}%</span>
+        </div>
       {% endfor %}
-</ul>
     </div>
   </div>
-</div>
-   <h2>Favorited Pokémon:</h2>
-<ul>
-    {% for fav in favorites %}
-        <li>{{ fav.pokemon.name }}</li>
-    {% empty %}
-        <li>No favorites yet.</li>
-    {% endfor %}
-</ul>
-<a class="edit-profile" href="{% url 'trading:update_profile' %}">Edit Profile</a>
+  </div>
+
 </div>
 {% endblock %}
