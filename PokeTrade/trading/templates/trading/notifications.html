@@ -6,9 +6,18 @@
 <body>
     <h1>Your Notifications</h1>
     <ul>
-        {% for notification in user_notifications %}
-            <li>{{ notification.message }}</li>
-        {% endfor %}
+        {% for note in notifications %}
+    <li>
+      {{ note.message }} - {{ note.timestamp }}
+      <form method="post" action="{% url 'trading:handle_trade' note.trade.id %}">
+        {% csrf_token %}
+        <button name="action" value="accept">Accept</button>
+        <button name="action" value="decline">Decline</button>
+      </form>
+    </li>
+  {% empty %}
+    <p>No notifications.</p>
+  {% endfor %}
     </ul>
 </body>
 {% endblock %}

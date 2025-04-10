@@ -125,9 +125,8 @@ def sale(request):
 
 @login_required
 def notifications(request):
-    user_notifications = Notification.objects.filter(user=request.user)
-    context = {'user_notifications': user_notifications}
-    return render(request, 'trading/notifications.html')
+    user_notifications = Notification.objects.filter(user=request.user).order_by('-timestamp')
+    return render(request, 'trading/notifications.html', {'user_notifications': user_notifications})
 
 
 def user_profile(request):
@@ -219,8 +218,13 @@ def create_trade(request):
         trade = Trade.objects.create(
             sender=sender,
             receiver=receiver,
-            pokemon_offered=offered,
-            pokemon_requested=requested
+        )
+        trade.pokemon_offered.set([offered])
+        trade.pokemon_requested.set([requested])
+        Notification.objects.create(
+            user=receiver.user,
+            trade=trade,
+            message=f"{sender.user.username} has sent you a trade request!"
         )
         return redirect('trading:trade_list')
 
@@ -248,3 +252,19 @@ def view_user_profile(request, username):
     user_profile = get_object_or_404(UserProfile, user=user)
     favorites = Favorite.objects.filter(user=user).select_related('pokemon')
     return render(request, 'trading/view_user_profile.html', {'user_profile': user_profile, 'favorites': favorites,})
+
+
+@login_required
+def handle_trade(request, trade_id):
+    trade = get_object_or_404(Trade, id=trade_id)
+    if request.method == 'POST':
+        if request.POST.get('action') == 'accept':
+            trade.accepted = True
+            trade.save()
+            # Transfer Pokémon ownership logic here
+        else:
+            trade.accepted = False
+            trade.save()
+
+        Notification.objects.filter(trade=trade).update(is_read=True)
+    return redirect('trading:notifications')

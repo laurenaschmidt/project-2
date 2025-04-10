@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 class Pokemon(models.Model):
     name = models.CharField(max_length=100)
     number = models.IntegerField(unique=True)
@@ -79,9 +78,14 @@ class Leaderboard(models.Model):
     score = models.IntegerField(default=0)
 
 
+def trade():
+    pass
+
+
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.CharField(max_length=255)
+    trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default=trade())
     read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
