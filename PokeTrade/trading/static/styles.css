@@ -114,7 +114,7 @@ body {
 
 /* HEADER */
 .home-page .home-header {
-  background-color: #ffeeee;
+  background-color: #f0f0e6;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -295,4 +295,105 @@ body {
   padding-left: 0;
   font-size: 18px;
   line-height: 1.8;
+}
+
+.marketplace-container {
+  background-color: #ffeeee;
+  padding: 40px;
+  text-align: center;
+}
+
+.marketplace-heading {
+  font-size: 48px;
+  font-family: 'Georgia', serif;
+  margin-bottom: 20px;
+}
+
+.poke-title {
+  color: #d62828;
+  font-size: 60px;
+  font-weight: bold;
+}
+
+.marketplace-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.search-form {
+  display: flex;
+  background-color: #f4c400;
+  border-radius: 40px;
+  padding: 8px 20px;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+.search-form input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Georgia', serif;
+  font-size: 18px;
+  width: 100%;
+}
+
+.search-form button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.account-balance {
+  font-family: 'Georgia', serif;
+  font-size: 20px;
+  margin-left: 30px;
+}
+
+.marketplace-pokemon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.marketplace-card {
+  background-color: #f4c400;
+  padding: 20px;
+  border-radius: 60px;
+  width: 260px;
+  font-family: 'Georgia', serif;
+  color: #000;
+}
+
+.marketplace-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 15px 0;
+}
+
+.favorite-btn,
+.buy-btn {
+  background-color: #ffeeee;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px 6px 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Georgia', serif;
+  display: inline-block;
+}
+
+.favorite-btn span {
+  margin-left: 6px;
 }

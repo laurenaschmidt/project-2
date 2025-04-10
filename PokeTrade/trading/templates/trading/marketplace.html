@@ -1,37 +1,48 @@
 {% extends 'trading/base.html' %}
+{% load static %}
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon Marketplace</title>
-</head>
-<body>
-    <h1>Welcome to the Pokémon Marketplace!</h1>
 
-    <form method="get" action="{% url 'trading:marketplace' %}">
-        <input type="text" name="search" placeholder="Search Pokémon by name, type, or number" value="{{ request.GET.search }}">
-        <button type="submit">Search</button>
-</form>
-    <div>
-        <h1>Available Pokémon for Purchase</h1>
-  <div class="pokemon-list">
-      {% for pokemon in pokemon_list %}
-        <div>
-        <p>{{ pokemon.name }}</p>
-            <img src="{{ pokemon.image }}">
-                    <p>Price: ${{ pokemon.price }}</p>
-                    <p>Type: {{ pokemon.type }}</p>
-        <form action="{% url 'trading:favorite_pokemon' pokemon.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Favorite</button>
-        </form>
-        <form action="{% url 'trading:buy_pokemon' pokemon.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Buy Now</button>
-        </form>
+<div class="marketplace-container">
+
+  <!-- Page Title -->
+  <h1 class="marketplace-heading">WELCOME TO <span class="poke-title">POKETRADE</span><br>MARKET PLACE</h1>
+
+  <!-- Top Row: Search + Balance -->
+  <div class="marketplace-top">
+    <form method="get" action="{% url 'trading:marketplace' %}" class="search-form">
+      <input type="text" name="search" placeholder="Search" value="{{ request.GET.search }}">
+      <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
+    <p class="account-balance">ACCOUNT BALANCE: {{ user_profile.balance }}</p>
+  </div>
+
+  <!-- Pokémon Cards -->
+  <div class="marketplace-pokemon-grid">
+    {% for pokemon in pokemon_list %}
+    <div class="marketplace-card">
+      <h2>{{ pokemon.name|upper }}</h2>
+      <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+      <p><strong>PRICE:</strong> {{ pokemon.price }}</p>
+      <p><strong>TYPE:</strong> {{ pokemon.type }}</p>
+
+      <form method="post" action="{% url 'trading:favorite_pokemon' pokemon.id %}">
+        {% csrf_token %}
+        <button class="favorite-btn" type="submit">
+          {% if pokemon in user_profile.favorite_pokemon.all %}
+            FAVORITE <span>🖤</span>
+          {% else %}
+            FAVORITE <span>🤍</span>
+          {% endif %}
+        </button>
+      </form>
+
+      <form method="post" action="{% url 'trading:buy_pokemon' pokemon.id %}">
+        {% csrf_token %}
+        <button class="buy-btn" type="submit">BUY</button>
+      </form>
     </div>
     {% endfor %}
   </div>
-    </div>
-</body>
+</div>
+
 {% endblock %}
