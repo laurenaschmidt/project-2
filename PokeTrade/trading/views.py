@@ -219,9 +219,9 @@ def create_trade(request):
         trade = Trade.objects.create(
             sender=sender,
             receiver=receiver,
-            pokemon_offered=offered,
-            pokemon_requested=requested
         )
+        trade.pokemon_offered.set([offered])
+        trade.pokemon_requested.set([requested])
         return redirect('trading:trade_list')
 
     return redirect('trading:trade_list')
