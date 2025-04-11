@@ -43,6 +43,11 @@
             {% csrf_token %}
             <button type="submit">Release</button>
           </form>
+          <form action="{% url 'trading:list_pokemon_for_sale' pokemon.id %}" method="POST">
+    {% csrf_token %}
+    <input type="number" step="1.00" name="price" placeholder="Enter price" required>
+    <button type="submit">List for Sale</button>
+</form>
         </div>
       {% endfor %}
 

@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from . import models
 from .forms import UserProfileForm, CustomSignupForm
 from .models import Pokemon, Collection, Trade, Sale, WishList, Favorite, Leaderboard, UserProfile, LeaderboardEntry, \
-    Notification
+    Notification, ForSale
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
@@ -101,13 +101,27 @@ def update_profile(request):
 
 @login_required
 def marketplace(request):
-        search_query = request.GET.get('search', '')
-        if search_query:
-            pokemon_list = Pokemon.objects.filter(Q(name__icontains=search_query) | Q(type__icontains=search_query) |Q(id__icontains=search_query))
-        else:
-            pokemon_list = Pokemon.objects.all()
+    user_profile = get_object_or_404(UserProfile, user=request.user)
 
-        return render(request, 'trading/marketplace.html', {'pokemon_list': pokemon_list})
+    search_query = request.GET.get('search', '')
+    if search_query:
+        pokemon_list = Pokemon.objects.filter(
+            Q(name__icontains=search_query) |
+            Q(type__icontains=search_query) |
+            Q(id__icontains=search_query)
+        )
+    else:
+        pokemon_list = Pokemon.objects.all()
+
+    sales = ForSale.objects.select_related('pokemon', 'seller').all()
+
+    context = {
+        'pokemon_list': pokemon_list,
+        'sales': sales,
+        'user_profile': user_profile,
+    }
+
+    return render(request, 'trading/marketplace.html', context)
 
 @login_required
 def trade(request):
@@ -263,3 +277,16 @@ def view_user_profile(request, username):
     user_profile = get_object_or_404(UserProfile, user=user)
     favorites = Favorite.objects.filter(user=user).select_related('pokemon')
     return render(request, 'trading/view_user_profile.html', {'user_profile': user_profile, 'favorites': favorites,})
+
+@login_required
+def list_pokemon_for_sale(request, pokemon_id):
+    if request.method == 'POST':
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+        pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+
+        if pokemon in user_profile.owned_pokemon.all():
+            price = request.POST.get('price')
+            ForSale.objects.create(seller=user_profile, pokemon=pokemon, price=price)
+            return redirect('trading:profile')
+
+    return redirect('trading:profile')

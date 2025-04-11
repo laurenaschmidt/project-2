@@ -31,7 +31,7 @@ urlpatterns = [
     path('create_trade/', views.create_trade, name='create_trade'),
     path('accept_trade/<int:trade_id>/', views.accept_trade, name='accept_trade'),
     path('profile/<str:username>/', views.view_user_profile, name='view_user_profile'),
-
+    path('list_for_sale/<int:pokemon_id>/', views.list_pokemon_for_sale, name='list_pokemon_for_sale'),
 ]
 
 # Serve media files during development
