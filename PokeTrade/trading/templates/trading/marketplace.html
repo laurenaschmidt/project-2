@@ -43,6 +43,19 @@
     </div>
     {% endfor %}
   </div>
+  {% for sale in sales %}
+  <div class="pokemon-card">
+      <p>{{ sale.pokemon.name }} (ID: {{ sale.pokemon.id }})</p>
+      <p>Type: {{ sale.pokemon.type }}</p>
+      <p>Price: ${{ sale.price }}</p>
+      <p>Seller: {{ sale.seller.user.username }}</p>
+
+      <form action="{% url 'trading:buy_pokemon' sale.pokemon.id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit">Buy Now</button>
+      </form>
+  </div>
+{% endfor %}
 </div>
 
 {% endblock %}
