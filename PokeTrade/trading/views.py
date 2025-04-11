@@ -197,15 +197,30 @@ def trade_list(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
     user_trades = Trade.objects.filter(sender=user_profile) | Trade.objects.filter(receiver=user_profile)
     available_trades = Trade.objects.exclude(sender=user_profile)
-
     other_users = UserProfile.objects.exclude(id=user_profile.id)
 
+    selected_offered = None
+    requested_pokemon = None
+
+    if request.method == 'POST':
+        offered_id = request.POST.get('pokemon_offered_id')
+        requested_name = request.POST.get('pokemon_requested_name')
+
+        if offered_id:
+            selected_offered = Pokemon.objects.filter(id=offered_id).first()
+
+        if requested_name:
+            requested_pokemon = Pokemon.objects.filter(name__iexact=requested_name).first()
+
     return render(request, 'trading/trade_list.html', {
+        'user_profile': user_profile,
         'user_trades': user_trades,
         'available_trades': available_trades,
-        'user_profile': user_profile,
         'other_users': other_users,
+        'selected_offered': selected_offered,
+        'requested_pokemon': requested_pokemon,
     })
+
 
 
 def create_trade(request):

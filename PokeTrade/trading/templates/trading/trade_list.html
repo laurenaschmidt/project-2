@@ -1,63 +1,94 @@
 {% extends 'trading/base.html' %}
+{% load static %}
 {% block content %}
-<h1>🔁 Pokémon Trades</h1>
 
-<h2>Your Active Trades</h2>
-<ul>
-  {% for trade in user_trades %}
-    <li>
-      You offered {{ trade.pokemon_offered.name }} to {{ trade.receiver.user.username }}
-      for {{ trade.pokemon_requested.name }}
-      {% if not trade.accepted %}
-        - Pending
-      {% else %}
-        - ✅ Accepted
+<div class="trade-page">
+
+  <!-- Header -->
+  <h1 class="trade-title"><span class="poke-title">POKETRADE</span><br>TRADING CENTER</h1>
+
+  <!-- Trade Form -->
+  <form method="post" action="{% url 'trading:create_trade' %}" class="trade-form">
+    {% csrf_token %}
+
+    <!-- Trade with field -->
+    <div class="trade-controls">
+      <label for="receiver"><strong>CREATE TRADE<br>TRADE WITH:</strong></label>
+      <input type="text" name="receiver_username" placeholder="username" required>
+    </div>
+
+    <div class="trade-card-container">
+
+    <!-- Your Pokémon -->
+    <div class="trade-card">
+      <p class="card-title">YOUR POKEMON</p>
+
+      <!-- Dropdown to select Pokémon -->
+      <select name="pokemon_offered_id" required>
+        <option value="">-- Select a Pokémon --</option>
+        {% for pokemon in user_profile.owned_pokemon.all %}
+          <option value="{{ pokemon.id }}"
+            {% if selected_offered and selected_offered.id == pokemon.id %}selected{% endif %}>
+            {{ pokemon.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <!-- Show Pokémon image & name if one is selected -->
+      {% if selected_offered %}
+        <p class="poke-name">{{ selected_offered.name }}</p>
+        {% if selected_offered.image %}
+          <img src="{{ selected_offered.image }}" alt="{{ selected_offered.name }}">
+        {% endif %}
       {% endif %}
-    </li>
-  {% empty %}
-    <li>No trades yet.</li>
-  {% endfor %}
-</ul>
+    </div>
 
-<h2>Open Trade Offers</h2>
-<ul>
-  {% for trade in available_trades %}
-    <li>
-      {{ trade.sender.user.username }} is offering
-      {{ trade.pokemon_offered.name }} for
-      {{ trade.pokemon_requested.name }}
-      {% if trade.receiver == user_profile and not trade.accepted %}
-      <form method="post" action="{% url 'trading:accept_trade' trade.id %}">
-        {% csrf_token %}
-        <button type="submit">Accept</button>
-      </form>
+
+
+    <!-- Arrows -->
+    <div class="arrow">➡️<br>⬅️</div>
+
+    <!-- Their Pokémon -->
+    <div class="trade-card">
+      <p class="card-title">THEIR POKEMON</p>
+      <input class="poke-name-input" type="text" name="pokemon_requested_name" placeholder="Name..." required>
+
+      {% if requested_pokemon %}
+        <img src="{{ requested_pokemon.image }}" alt="{{ requested_pokemon.name }}">
       {% endif %}
-    </li>
-  {% empty %}
-    <li>No open trades.</li>
-  {% endfor %}
-</ul>
+    </div>
 
-<h2>Create a New Trade</h2>
-<form method="post" action="{% url 'trading:create_trade' %}">
-  {% csrf_token %}
-  <label for="receiver">Trade With:</label>
-  <select name="receiver_id">
-    {% for user in other_users %}
-      <option value="{{ user.id }}">{{ user.user.username }}</option>
+
+  </div>
+
+    <button class="request-trade-btn" type="submit">REQUEST TRADE</button>
+  </form>
+
+  <!-- Your Trades -->
+  <div class="trades-column">
+    <h2>YOUR TRADES</h2>
+    {% for trade in user_trades %}
+      <p>{{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} - {{ trade.timestamp|date:"n/j/y" }}</p>
+    {% empty %}
+      <p>No trades yet.</p>
     {% endfor %}
-  </select><br>
 
-  <label for="pokemon_offered">Your Pokémon:</label>
-  <select name="pokemon_offered_id">
-    {% for pokemon in user_profile.owned_pokemon.all %}
-      <option value="{{ pokemon.id }}">{{ pokemon.name }}</option>
+    <h2>OPEN TRADE OFFERS</h2>
+    {% for trade in available_trades %}
+      <div class="open-trade">
+        <p>{{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} - {{ trade.sender.user.username }}</p>
+        {% if trade.receiver == user_profile and not trade.accepted %}
+          <form method="post" action="{% url 'trading:accept_trade' trade.id %}">
+            {% csrf_token %}
+            <button class="view-btn" type="submit">VIEW</button>
+          </form>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>No open trades.</p>
     {% endfor %}
-  </select><br>
+  </div>
 
-  <label for="pokemon_requested">Their Pokémon (name):</label>
-  <input type="text" name="pokemon_requested_name"><br>
+</div>
 
-  <button type="submit">Send Trade</button>
-</form>
 {% endblock %}
