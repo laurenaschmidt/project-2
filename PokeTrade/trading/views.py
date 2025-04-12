@@ -191,7 +191,19 @@ def buy_pokemon(request, pokemon_id):
     pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     user_profile = UserProfile.objects.get(user=request.user)
 
-    # Add the Pokémon to the user's owned Pokémon
+    try:
+        # Check if the Pokémon is being sold by another user
+        sale = ForSale.objects.get(pokemon=pokemon)
+
+        # Remove Pokémon from the seller's owned list
+        seller_profile = sale.seller
+        seller_profile.owned_pokemon.remove(pokemon)
+        seller_profile.save()
+        sale.delete()
+
+    except ForSale.DoesNotExist:
+        pass
+
     user_profile.owned_pokemon.add(pokemon)
     user_profile.save()
 
