@@ -25,4 +25,30 @@
         <li>No favorites yet.</li>
     {% endfor %}
 </ul>
+<h2>Pokémon for Sale</h2>
+<ul>
+  {% for sale in pokemon_for_sale %}
+    <li>{{ sale.pokemon.name }} – ${{ sale.price }}</li>
+  {% empty %}
+    <li>No Pokémon currently for sale.</li>
+  {% endfor %}
+</ul>
+
+<h2>Trades Sent</h2>
+<ul>
+  {% for trade in trades_sent %}
+    <li>Offered {{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} (to {{ trade.receiver.user.username }})</li>
+  {% empty %}
+    <li>No trades sent.</li>
+  {% endfor %}
+</ul>
+
+<h2>Trades Received</h2>
+<ul>
+  {% for trade in trades_received %}
+    <li>{{ trade.sender.user.username }} offered {{ trade.pokemon_offered.name }} for your {{ trade.pokemon_requested.name }}</li>
+  {% empty %}
+    <li>No trades received.</li>
+  {% endfor %}
+</ul>
 {% endblock %}
