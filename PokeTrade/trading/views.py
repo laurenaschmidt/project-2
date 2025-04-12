@@ -191,7 +191,19 @@ def buy_pokemon(request, pokemon_id):
     pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     user_profile = UserProfile.objects.get(user=request.user)
 
-    # Add the Pokémon to the user's owned Pokémon
+    try:
+        # Check if the Pokémon is being sold by another user
+        sale = ForSale.objects.get(pokemon=pokemon)
+
+        # Remove Pokémon from the seller's owned list
+        seller_profile = sale.seller
+        seller_profile.owned_pokemon.remove(pokemon)
+        seller_profile.save()
+        sale.delete()
+
+    except ForSale.DoesNotExist:
+        pass
+
     user_profile.owned_pokemon.add(pokemon)
     user_profile.save()
 
@@ -275,8 +287,11 @@ def accept_trade(request, trade_id):
 def view_user_profile(request, username):
     user = get_object_or_404(User, username=username)
     user_profile = get_object_or_404(UserProfile, user=user)
+    pokemon_for_sale = ForSale.objects.filter(seller=user_profile)
+    trades_sent = Trade.objects.filter(sender=user_profile)
+    trades_received = Trade.objects.filter(receiver=user_profile)
     favorites = Favorite.objects.filter(user=user).select_related('pokemon')
-    return render(request, 'trading/view_user_profile.html', {'user_profile': user_profile, 'favorites': favorites,})
+    return render(request, 'trading/view_user_profile.html', {'user_profile': user_profile, 'favorites': favorites, 'pokemon_for_sale': pokemon_for_sale, 'trades_sent': trades_sent, 'trades_received': trades_received})
 
 @login_required
 def list_pokemon_for_sale(request, pokemon_id):

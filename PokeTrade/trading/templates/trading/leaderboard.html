@@ -39,7 +39,9 @@
           {% elif forloop.counter == 3 %}
             🥉
           {% endif %}
-          – {{ profile.owned_pokemon.count }} Pokémon
+          <a href="{% url 'trading:view_user_profile' profile.user.username %}">
+  {{ profile.user.username }}
+</a> – {{ profile.owned_pokemon.count }} Pokémon
         </li>
       {% endfor %}
     </ol>
