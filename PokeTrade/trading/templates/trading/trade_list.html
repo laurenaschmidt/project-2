@@ -8,7 +8,7 @@
   <h1 class="trade-title"><span class="poke-title">POKETRADE</span><br>TRADING CENTER</h1>
 
   <!-- Trade Form -->
-  <form method="post" action="{% url 'trading:create_trade' %}" class="trade-form">
+  <form method="post" action="{% url 'trading:trade_list' %}" class="trade-form">
     {% csrf_token %}
 
     <!-- Trade with dropdown -->
@@ -61,9 +61,39 @@
       </div>
     </div>
 
-    <button class="request-trade-btn" type="submit">REQUEST TRADE</button>
-  </form>
+<button class="request-trade-btn" type="submit" name="action" value="submit">REQUEST TRADE</button>
+<button class="view-btn" type="submit" name="action" value="compare">COMPARE</button>
+    {% if selected_offered and selected_requested %}
+ <div class="comparison-box">
+    <h2>📊 Pokémon Comparison</h2>
+    <div class="comparison-grid">
+      <!-- Your Pokémon -->
+      <div class="comparison-card">
+        <h3>You are offering:</h3>
+        <img src="{{ selected_offered.image }}" alt="{{ selected_offered.name }}">
+        <p><strong>Name:</strong> {{ selected_offered.name }}</p>
+        <p><strong>Type:</strong> {{ selected_offered.type }}</p>
+        <p><strong>Experience:</strong> {{ selected_offered.base_experience }}</p>
+      </div>
 
+      <!-- Versus Divider -->
+      <div class="vs-divider">
+        <h1>VS</h1>
+      </div>
+
+      <!-- Their Pokémon -->
+      <div class="comparison-card">
+        <h3>You are requesting:</h3>
+        <img src="{{ selected_requested.image }}" alt="{{ selected_requested.name }}">
+        <p><strong>Name:</strong> {{ selected_requested.name }}</p>
+        <p><strong>Type:</strong> {{ selected_requested.type }}</p>
+        <p><strong>Experience:</strong> {{ selected_requested.base_experience }}</p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+  </form>
+  </div>
   <!-- Your Trades -->
   <div class="trades-column">
     <h2>YOUR TRADES</h2>

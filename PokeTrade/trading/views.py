@@ -223,62 +223,77 @@ def release_pokemon(request, pokemon_id):
 
 @login_required
 def trade_list(request):
-    user_profile = get_object_or_404(UserProfile, user=request.user)
-    user_trades = Trade.objects.filter(sender=user_profile) | Trade.objects.filter(receiver=user_profile)
-    available_trades = Trade.objects.exclude(sender=user_profile)
-    other_users = UserProfile.objects.exclude(id=user_profile.id)
+    user_profile = UserProfile.objects.get(user=request.user)
+    user_trades = Trade.objects.filter(sender=user_profile)
+    available_trades = Trade.objects.filter(receiver=user_profile, accepted=False)
+    other_users = UserProfile.objects.exclude(user=request.user)
 
-    selected_offered = None
-    requested_pokemon = None
-
-    if request.method == 'POST':
-        offered_id = request.POST.get('pokemon_offered_id')
-        requested_name = request.POST.get('pokemon_requested_name')
-
-        if offered_id:
-            selected_offered = Pokemon.objects.filter(id=offered_id).first()
-
-        if requested_name:
-            requested_pokemon = Pokemon.objects.filter(name__iexact=requested_name).first()
-
-    return render(request, 'trading/trade_list.html', {
+    context = {
         'user_profile': user_profile,
         'user_trades': user_trades,
         'available_trades': available_trades,
         'other_users': other_users,
-        'selected_offered': selected_offered,
-        'requested_pokemon': requested_pokemon,
-    })
+    }
 
-
-
-def create_trade(request):
     if request.method == 'POST':
-        sender_profile = UserProfile.objects.get(user=request.user)
+        action = request.POST.get('action')
         receiver_id = request.POST.get('receiver_id')
-        offered_id = request.POST.get('pokemon_offered_id')
-        requested_id = request.POST.get('pokemon_requested_id')
+        pokemon_offered_id = request.POST.get('pokemon_offered_id')
+        pokemon_requested_id = request.POST.get('pokemon_requested_id')
+
+        if receiver_id and pokemon_offered_id and pokemon_requested_id:
+            try:
+                receiver_profile = UserProfile.objects.get(id=receiver_id)
+                selected_offered = Pokemon.objects.get(id=pokemon_offered_id)
+                selected_requested = Pokemon.objects.get(id=pokemon_requested_id)
+
+                context.update({
+                    'selected_offered': selected_offered,
+                    'selected_requested': selected_requested,
+                    'receiver_profile': receiver_profile,
+                })
+            except (UserProfile.DoesNotExist, Pokemon.DoesNotExist):
+                pass
+
+            if action == 'compare':
+                # Just render the comparison view with context
+                return render(request, 'trading/trade_list.html', context)
+
+            elif action == 'submit':
+                # Redirect to the create_trade view, passing Pokémon IDs via URL
+                return redirect('trading:create_trade', pokemon_offered_id=selected_offered.id, receiver_id=receiver_profile.id, pokemon_requested_id=selected_requested.id)
+
+        return render(request, 'trading/trade_list.html', context)
+
+    return render(request, 'trading/trade_list.html', context)
 
 
-        receiver_profile = get_object_or_404(UserProfile, id=receiver_id)
-        pokemon_offered = get_object_or_404(Pokemon, id=offered_id)
-        pokemon_requested = get_object_or_404(Pokemon, id=requested_id)
+from django.shortcuts import get_object_or_404, redirect
+from .models import UserProfile, Pokemon, Trade, Notification
 
-        notification = Notification.objects.create(
-            user=receiver_profile,
-            message=f"You received a trade offer from {request.user.username}: {pokemon_offered.name} for {pokemon_requested.name}"
-        )
-        # Create trade
-        Trade.objects.create(
-            sender=sender_profile,
-            receiver=receiver_profile,
-            pokemon_offered=pokemon_offered,
-            pokemon_requested=pokemon_requested
-        )
 
-        return redirect('trading:trade_list')
+def create_trade(request, pokemon_offered_id, receiver_id, pokemon_requested_id):
+    sender_profile = UserProfile.objects.get(user=request.user)
+    receiver_profile = get_object_or_404(UserProfile, id=receiver_id)
+    pokemon_offered = get_object_or_404(Pokemon, id=pokemon_offered_id)
+    pokemon_requested = get_object_or_404(Pokemon, id=pokemon_requested_id)
+
+    # Check if trade already exists? Optional.
+    Trade.objects.create(
+        sender=sender_profile,
+        receiver=receiver_profile,
+        pokemon_offered=pokemon_offered,
+        pokemon_requested=pokemon_requested,
+    )
+
+    # Create a notification
+    Notification.objects.create(
+        user=receiver_profile,
+        message=f"You received a trade offer from {request.user.username}: {pokemon_offered.name} for {pokemon_requested.name}"
+    )
 
     return redirect('trading:trade_list')
+
 
 
 @login_required
