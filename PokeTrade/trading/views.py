@@ -252,18 +252,23 @@ def trade_list(request):
 
 def create_trade(request):
     if request.method == 'POST':
-        sender = get_object_or_404(UserProfile, user=request.user)
-        receiver = get_object_or_404(UserProfile, id=request.POST.get('receiver_id'))
-        offered = get_object_or_404(Pokemon, id=request.POST.get('pokemon_offered_id'))
-        requested_name = request.POST.get('pokemon_requested_name')
-        requested = get_object_or_404(Pokemon, name__iexact=requested_name)
+        sender_profile = UserProfile.objects.get(user=request.user)
+        receiver_id = request.POST.get('receiver_id')
+        offered_id = request.POST.get('pokemon_offered_id')
+        requested_id = request.POST.get('pokemon_requested_id')
 
-        trade = Trade.objects.create(
-            sender=sender,
-            receiver=receiver,
+        receiver_profile = get_object_or_404(UserProfile, id=receiver_id)
+        pokemon_offered = get_object_or_404(Pokemon, id=offered_id)
+        pokemon_requested = get_object_or_404(Pokemon, id=requested_id)
+
+        # Create trade
+        Trade.objects.create(
+            sender=sender_profile,
+            receiver=receiver_profile,
+            pokemon_offered=pokemon_offered,
+            pokemon_requested=pokemon_requested
         )
-        trade.pokemon_offered.set([offered])
-        trade.pokemon_requested.set([requested])
+
         return redirect('trading:trade_list')
 
     return redirect('trading:trade_list')
