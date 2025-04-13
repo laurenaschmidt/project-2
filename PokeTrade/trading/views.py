@@ -1,10 +1,12 @@
 import random
 from collections import Counter
 
+from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
 from . import models
 from .forms import UserProfileForm, CustomSignupForm
@@ -319,3 +321,14 @@ def get_user_pokemon(request, user_id):
         'pokemon': [{'id': p.id, 'name': p.name} for p in pokemon]
     }
     return JsonResponse(data)
+
+@require_POST
+def reject_trade(request, trade_id):
+    trade = get_object_or_404(Trade, id=trade_id)
+    if trade.receiver.user == request.user:
+        trade.delete()
+        messages.success(request, "Trade rejected.")
+    else:
+        messages.error(request, "You are not authorized to reject this trade.")
+
+    return redirect('trading:trade_list')
