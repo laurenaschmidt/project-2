@@ -142,9 +142,9 @@ def sale(request):
 
 @login_required
 def notifications(request):
-    user_notifications = Notification.objects.filter(user=request.user)
-    context = {'user_notifications': user_notifications}
-    return render(request, 'trading/notifications.html')
+    user_profile = UserProfile.objects.get(user=request.user)
+    notifications = user_profile.notifications.order_by('-timestamp')
+    return render(request, 'trading/notifications.html', {'notifications': notifications})
 
 
 def user_profile(request):
@@ -259,10 +259,15 @@ def create_trade(request):
         offered_id = request.POST.get('pokemon_offered_id')
         requested_id = request.POST.get('pokemon_requested_id')
 
+
         receiver_profile = get_object_or_404(UserProfile, id=receiver_id)
         pokemon_offered = get_object_or_404(Pokemon, id=offered_id)
         pokemon_requested = get_object_or_404(Pokemon, id=requested_id)
 
+        notification = Notification.objects.create(
+            user=receiver_profile,
+            message=f"You received a trade offer from {request.user.username}: {pokemon_offered.name} for {pokemon_requested.name}"
+        )
         # Create trade
         Trade.objects.create(
             sender=sender_profile,
