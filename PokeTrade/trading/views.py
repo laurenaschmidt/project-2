@@ -3,6 +3,7 @@ from collections import Counter
 
 from django.contrib.auth import login
 from django.db.models import Count, Q
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from . import models
@@ -305,3 +306,11 @@ def list_pokemon_for_sale(request, pokemon_id):
             return redirect('trading:profile')
 
     return redirect('trading:profile')
+
+def get_user_pokemon(request, user_id):
+    profile = get_object_or_404(UserProfile, id=user_id)
+    pokemon = profile.owned_pokemon.all()
+    data = {
+        'pokemon': [{'id': p.id, 'name': p.name} for p in pokemon]
+    }
+    return JsonResponse(data)
