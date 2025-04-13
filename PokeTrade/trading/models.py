@@ -80,7 +80,7 @@ class Leaderboard(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='notifications')
     message = models.CharField(max_length=255)
     read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)

@@ -1,14 +1,18 @@
 {% extends 'trading/base.html' %}
 {% block content %}
-<head>
-    <title>PokeTrade - Notifications</title>
-</head>
-<body>
-    <h1>Your Notifications</h1>
-    <ul>
-        {% for notification in user_notifications %}
-            <li>{{ notification.message }}</li>
-        {% endfor %}
-    </ul>
-</body>
+
+<h1>🔔 Notifications</h1>
+
+{% if notifications %}
+  <ul>
+    {% for notification in notifications %}
+      <li>
+        {{ notification.timestamp|date:"M d, Y H:i" }} – {{ notification.message }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No notifications.</p>
+{% endif %}
+
 {% endblock %}
