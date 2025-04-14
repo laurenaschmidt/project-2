@@ -94,6 +94,8 @@
 {% endif %}
   </form>
   </div>
+<h2>Find Local Trading Conventions</h2>
+<div id="map" style="height: 400px; width: 100%; margin-top: 1rem; border-radius: 12px;"></div>
   <!-- Your Trades -->
   <div class="trades-column">
     <h2>YOUR TRADES</h2>
@@ -147,6 +149,41 @@
         });
       });
   });
+</script>
+<script>
+  function initMap() {
+    const cityCenter = { lat: 40.7128, lng: -74.0060 }; // Example: New York City
+
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      center: cityCenter,
+    });
+
+    // Convention locations (you can replace or expand this list)
+    const conventions = [
+      { name: "New York Trade Hall", lat: 40.735, lng: -74.003 },
+      { name: "Tech PokeTrade", lat: 33.7780, lng: -84.3980 },
+    ];
+
+    conventions.forEach(location => {
+      const marker = new google.maps.Marker({
+        position: { lat: location.lat, lng: location.lng },
+        map: map,
+        title: location.name,
+      });
+
+      const info = new google.maps.InfoWindow({
+        content: `<h4>${location.name}</h4>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}" target="_blank">Get Directions</a>`
+      });
+
+      marker.addListener("click", () => info.open(map, marker));
+    });
+  }
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCl5Pwnx66ndyLXbcLuVPTBzCeqQHJjNF0&callback=initMap">
 </script>
 
 {% endblock %}
