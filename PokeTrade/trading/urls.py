@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
@@ -10,7 +10,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('pokemons/', views.pokemon_list, name='pokemon_list'),
     path('collection/', views.user_collection, name='user_collection'),
-    path('wishlist/', views.wishlist, name='wishlist'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('profile/', views.profile, name='profile'),
     path('sale/', views.sale, name='sale'),
@@ -35,6 +34,7 @@ urlpatterns = [
     path('api/get_user_pokemon/<int:user_id>/', views.get_user_pokemon, name='get_user_pokemon'),
     path('reject_trade/<int:trade_id>/', views.reject_trade, name='reject_trade'),
     path('create_trade/<int:pokemon_offered_id>/<int:receiver_id>/<int:pokemon_requested_id>/', views.create_trade, name='create_trade'),
+    path('wishlist/', views.wishlist_view, name='wishlist'),
 ]
 
 # Serve media files during development
