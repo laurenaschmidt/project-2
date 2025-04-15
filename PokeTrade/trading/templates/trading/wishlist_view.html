@@ -15,5 +15,19 @@
     {% else %}
       <p>Your wishlist is empty.</p>
     {% endif %}
+    <h2>Add Pokémon to your Wishlist</h2>
+<ul class="pokemon-list">
+  {% for pokemon in all_pokemon %}
+    <li class="pokemon-card">
+      <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+      <p>{{ pokemon.name }}</p>
+      <form method="POST" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="pokemon_id" value="{{ pokemon.id }}">
+        <button type="submit">Add to Wishlist</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
   </div>
 {% endblock %}

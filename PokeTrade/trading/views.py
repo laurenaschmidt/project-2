@@ -347,8 +347,23 @@ def reject_trade(request, trade_id):
 
 @login_required
 def wishlist_view(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    wishlist = WishList.objects.filter(user=user_profile)
-    return render(request, 'trading/wishlist_view.html', {'wishlist': wishlist})
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    wishlist, created = WishList.objects.get_or_create(user=user_profile)
+    all_pokemon = Pokemon.objects.all()
+
+    if request.method == 'POST':
+        pokemon_id = request.POST.get('pokemon_id')
+        if pokemon_id:
+            pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+            wishlist.pokemon.add(pokemon)
+            wishlist.save()
+            return redirect('trading:wishlist')
+
+    context = {
+        'wishlist': wishlist,
+        'all_pokemon': all_pokemon,
+    }
+
+    return render(request, 'trading/wishlist_view.html', context)
 
 
