@@ -7,6 +7,7 @@ class Pokemon(models.Model):
     name = models.CharField(max_length=100)
     number = models.IntegerField(unique=True)
     type = models.CharField(max_length=100)
+    experience_level = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)# Store as a comma-separated string
     image = models.URLField(max_length=200, null=True, blank=True)
 
