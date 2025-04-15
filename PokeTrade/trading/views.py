@@ -4,7 +4,7 @@ from collections import Counter
 from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import Count, Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
@@ -54,14 +54,6 @@ def pokemon_detail(request, pokemon_name):
 def user_collection(request):
     collection = Collection.objects.get(user=request.user)
     return render(request, 'trading/collection.html', {'collection': collection})
-
-
-
-@login_required
-def wishlist(request):
-    wishlist = WishList.objects.get(user=request.user)
-    return render(request, 'trading/wishlist.html', {'wishlist': wishlist})
-
 
 def leaderboard(request):
     top_users = UserProfile.objects.annotate(
@@ -352,3 +344,11 @@ def reject_trade(request, trade_id):
         messages.error(request, "You are not authorized to reject this trade.")
 
     return redirect('trading:trade_list')
+
+@login_required
+def wishlist_view(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    wishlist = WishList.objects.filter(user=user_profile)
+    return render(request, 'trading/wishlist_view.html', {'wishlist': wishlist})
+
+

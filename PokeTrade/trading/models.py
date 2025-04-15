@@ -20,7 +20,6 @@ class UserProfile(models.Model):
     favorite_pokemon = models.ForeignKey(Pokemon, on_delete=models.SET_NULL, null=True, blank=True, related_name='favorited_by')
     collection = models.ManyToManyField(Pokemon, related_name='collected_by', blank=True)
     owned_pokemon = models.ManyToManyField(Pokemon, blank=True)
-    wishlist = models.ManyToManyField(Pokemon, related_name='wishlist_by', blank=True)
 
     def __str__(self):
         return self.user.username
@@ -51,8 +50,12 @@ class Sale(models.Model):
         return f"{self.pokemon.name} - ${self.price}"
 
 class WishList(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='wishlist')
     pokemon = models.ManyToManyField(Pokemon, related_name='wishlisted_by')
+
+    def __str__(self):
+        return f"{self.user.user.username}'s Wishlist"
+
 
 
 class Favorite(models.Model):
