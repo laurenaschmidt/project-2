@@ -1,15 +1,25 @@
 {% extends 'trading/base.html' %}
+{% load static %}
+
 {% block content %}
-<head>
-    <title>Sign Up</title>
-</head>
-<body>
-    <h2>Sign Up</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
+<div class="signup-wrapper">
+  <div class="signup-center">
+    <h1 class="title">POKETRADE</h1>
+    <h2 class="subtitle">SIGN UP</h2>
+
+    <form method="post" class="signup-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="signup-button">Sign Up</button>
     </form>
-    <p>Already have an account? <a href="{% url 'trading:login' %}">Login here</a>.</p>
-</body>
+
+    <p class="login-text">Already have an account? <a href="{% url 'trading:login' %}">Login here</a>.</p>
+  </div>
+
+  <div class="pokemon-row">
+    <img src="{% static 'images/squirtle.png' %}" alt="Squirtle">
+    <img src="{% static 'images/charmander.png' %}" alt="Charmander">
+    <img src="{% static 'images/bulbasaur.png' %}" alt="Bulbasaur">
+  </div>
+</div>
 {% endblock %}
