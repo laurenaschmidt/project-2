@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from django.urls import reverse_lazy
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -122,9 +122,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = 'trading:home'
-LOGOUT_REDIRECT_URL = 'trading:signup'
+LOGIN_URL = reverse_lazy('trading:login')
+LOGIN_REDIRECT_URL = reverse_lazy('trading:profile')
+LOGOUT_REDIRECT_URL = reverse_lazy('trading:signup')
 
 # Media files (user-uploaded like profile pictures)
 MEDIA_URL = '/media/'
