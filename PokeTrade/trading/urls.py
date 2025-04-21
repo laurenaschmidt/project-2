@@ -15,7 +15,9 @@ urlpatterns = [
     path('sale/', views.sale, name='sale'),
     path('notifications/', views.notifications, name='notifications'),
     path('profile/', views.profile, name='profile'),
+
     path('trades/', views.trade_list, name='trade_list'),
+
     path('import/<str:pokemon_name>/', views.import_pokemon, name='import_pokemon'),
     path('pokemon/<str:pokemon_name>/', views.pokemon_detail, name='pokemon_detail'),
     path('marketplace/', views.marketplace, name='marketplace'),
@@ -26,7 +28,9 @@ urlpatterns = [
     path('favorite/<int:pokemon_id>/', views.favorite_pokemon, name='favorite_pokemon'),
     path('buy/<int:pokemon_id>/', views.buy_pokemon, name='buy_pokemon'),
     path('release/<int:pokemon_id>/', views.release_pokemon, name='release_pokemon'),
+
     path('trade/', views.trade_list, name='trade_list'),
+
     path('create_trade/', views.create_trade, name='create_trade'),
     path('accept_trade/<int:trade_id>/', views.accept_trade, name='accept_trade'),
     path('profile/<str:username>/', views.view_user_profile, name='view_user_profile'),
@@ -35,6 +39,8 @@ urlpatterns = [
     path('reject_trade/<int:trade_id>/', views.reject_trade, name='reject_trade'),
     path('create_trade/<int:pokemon_offered_id>/<int:receiver_id>/<int:pokemon_requested_id>/', views.create_trade, name='create_trade'),
     path('wishlist/', views.wishlist_view, name='wishlist'),
+
+    path('trade_offers/', views.trade_offers_view, name='trade_offers'),  # You don't need trade_id here for listing all trade offers
 ]
 
 # Serve media files during development

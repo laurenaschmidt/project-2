@@ -220,11 +220,18 @@ def trade_list(request):
     available_trades = Trade.objects.filter(receiver=user_profile, accepted=False)
     other_users = UserProfile.objects.exclude(user=request.user)
 
+    user_ids = Trade.objects.filter(
+        accepted=False,
+        receiver=user_profile
+    ).values_list("sender", flat=True).distinct()
+    users_with_trades = UserProfile.objects.filter(id__in=user_ids)
+
     context = {
         'user_profile': user_profile,
         'user_trades': user_trades,
         'available_trades': available_trades,
         'other_users': other_users,
+        'other_users_with_trades_to_me': users_with_trades
     }
 
     if request.method == 'POST':
@@ -366,4 +373,30 @@ def wishlist_view(request):
 
     return render(request, 'trading/wishlist_view.html', context)
 
+@login_required
+def trade_offers_view(request, trade_id=None):  
+    print("TRADE OFFERS VIEW")
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)  
+    trades = Trade.objects.filter(receiver=user_profile, accepted=False)
+    user_id = request.GET.get("user")
+
+    if user_id:
+        try:
+            user_id = int(user_id)
+            trades = trades.filter(sender__id=user_id, receiver=user_profile)
+        except ValueError:
+            pass 
+
+    user_ids = Trade.objects.filter(
+        accepted=False,
+        receiver=user_profile
+    ).values_list("sender", flat=True).distinct()
+    users_with_trades = UserProfile.objects.filter(id__in=user_ids)
+
+    context = {
+        "available_trades": trades,
+        "other_users_with_trades_to_me": users_with_trades,
+        "user_profile": user_profile,
+    }
+    return render(request, "trading/trade_list.html", context)
 
