@@ -38,6 +38,8 @@ urlpatterns = [
     path('sale/', views.sale, name='sale'),
     path('notifications/', views.notifications, name='notifications'),
     path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('wishlist/remove/<int:pokemon_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+
 
     # Auth
     path('login/', auth_views.LoginView.as_view(template_name='trading/login.html'), name='login'),
