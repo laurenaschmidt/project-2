@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('trading/', include('trading.urls')),
-    # path('', include('trading.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+
+    # New line: Redirect root to trading home
+    path('', lambda request: redirect('trading:home', permanent=False)),
 ]
