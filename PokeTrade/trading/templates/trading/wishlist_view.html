@@ -9,6 +9,10 @@
           <li class="wishlist-card">
             <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
             <p>{{ pokemon.name }}</p>
+            <form action="{% url 'trading:remove_from_wishlist' pokemon.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit">Remove</button>
+            </form>
           </li>
         {% endfor %}
       </ul>

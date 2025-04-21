@@ -400,3 +400,9 @@ def trade_offers_view(request, trade_id=None):
     }
     return render(request, "trading/trade_list.html", context)
 
+@login_required
+def remove_from_wishlist(request, pokemon_id):
+    wishlist = get_object_or_404(WishList, user=request.user.userprofile)
+    pokemon = get_object_or_404(Pokemon, id=pokemon_id)
+    wishlist.pokemon.remove(pokemon)
+    return redirect('trading:wishlist')
