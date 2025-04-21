@@ -1,8 +1,21 @@
+/* GLOBAL RESET */
 body {
-  background-color: #f0f0e6;
+  background-color: #fdf7e7;
   font-family: 'Monaco', monospace;
+  margin: 0;
+  padding: 0;
 }
 
+/* Layout Containers */
+.profile-container,
+.signup-wrapper,
+.marketplace-container,
+.trade-page,
+.leaderboard-container {
+  background-color: inherit;
+}
+
+/* PROFILE PAGE */
 .profile-container {
   display: flex;
   gap: 50px;
@@ -36,9 +49,7 @@ body {
   margin-top: 20px;
 }
 
-.bio,
-.favorite,
-.abilities {
+.bio, .favorite, .abilities {
   font-size: 18px;
   margin: 10px 0;
 }
@@ -86,21 +97,15 @@ body {
   background-color: #fff;
 }
 
-.pokemon-box p {
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 8px;
-}
-
 .pokemon-box img:hover {
   transform: scale(1.1);
   transition: transform 0.2s ease;
 }
 
-.view-more {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.pokemon-box p {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 8px;
 }
 
 .edit-profile {
@@ -112,9 +117,15 @@ body {
   color: #0077cc;
 }
 
-/* HEADER */
+.view-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* HOME HEADER + NAVIGATION */
 .home-page .home-header {
-  background-color: #f0f0e6;
+  background-color: inherit;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -166,9 +177,8 @@ body {
   background-color: #bb1f1f;
 }
 
-/* NAVIGATION */
 .home-page .nav-box {
-  background-color: #eeeeee;
+  background-color: inherit;
   padding: 60px 40px;
   margin: 60px auto;
   border-radius: 40px;
@@ -196,21 +206,15 @@ body {
   background-color: #e0b300;
 }
 
+/* FAVORITES / STATS */
 .stat-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin: 10px 0;
-}
-
-.stat-left,
-.stat-right {
-  font-size: 16px;
 }
 
 .favorites-section {
   margin-top: 25px;
-  margin-bottom: 25px;
   padding: 0 20px;
 }
 
@@ -234,6 +238,7 @@ body {
   margin: 4px 0;
 }
 
+/* LEADERBOARD */
 .leaderboard-container {
   text-align: center;
   padding: 40px 20px;
@@ -247,19 +252,12 @@ body {
   font-family: 'Georgia', serif;
 }
 
-/* PODIUM SECTION */
 .podium {
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: 40px;
   margin-bottom: 50px;
-}
-
-.podium-first, .podium-second, .podium-third {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .podium-first {
@@ -273,9 +271,8 @@ body {
   border-radius: 16px;
 }
 
-/* RANKING BOX */
 .ranking-box {
-  background-color: #ffeeee;
+  background-color: inherit;
   padding: 30px;
   border-radius: 40px;
   width: 400px;
@@ -283,22 +280,8 @@ body {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-.ranking-title {
-  font-size: 28px;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.ranking-list {
-  list-style-position: inside;
-  text-align: left;
-  padding-left: 0;
-  font-size: 18px;
-  line-height: 1.8;
-}
-
+/* MARKETPLACE */
 .marketplace-container {
-  background-color: #ffeeee;
   padding: 40px;
   text-align: center;
 }
@@ -319,8 +302,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 30px 0;
   flex-wrap: wrap;
+  margin: 30px 0;
 }
 
 .search-form {
@@ -328,32 +311,24 @@ body {
   background-color: #f4c400;
   border-radius: 40px;
   padding: 8px 20px;
-  align-items: center;
   gap: 10px;
   flex-grow: 1;
   max-width: 400px;
 }
 
 .search-form input {
-  border: none;
-  outline: none;
   background: transparent;
-  font-family: 'Georgia', serif;
+  border: none;
   font-size: 18px;
   width: 100%;
+  outline: none;
 }
 
 .search-form button {
   background: none;
   border: none;
+  font-size: 20px;
   cursor: pointer;
-  font-size: 20px;
-}
-
-.account-balance {
-  font-family: 'Georgia', serif;
-  font-size: 20px;
-  margin-left: 30px;
 }
 
 .marketplace-pokemon-grid {
@@ -370,7 +345,6 @@ body {
   border-radius: 60px;
   width: 260px;
   font-family: 'Georgia', serif;
-  color: #000;
 }
 
 .marketplace-card img {
@@ -380,9 +354,8 @@ body {
   margin: 15px 0;
 }
 
-.favorite-btn,
-.buy-btn {
-  background-color: #ffeeee;
+.favorite-btn, .buy-btn {
+  background-color: #fff;
   border: none;
   font-size: 16px;
   font-weight: bold;
@@ -390,27 +363,14 @@ body {
   padding: 6px 14px;
   border-radius: 20px;
   cursor: pointer;
-  font-family: 'Georgia', serif;
-  display: inline-block;
 }
 
-.favorite-btn span {
-  margin-left: 6px;
-}
-
+/* TRADE PAGE */
 .trade-page {
-  background-color: #fdfaf4;
   padding: 40px;
   font-family: 'Georgia', serif;
   color: #000;
   text-align: center;
-}
-
-.poke-title {
-  font-size: 56px;
-  font-weight: bold;
-  color: #d62828;
-  margin-bottom: 0;
 }
 
 .trade-title {
@@ -419,29 +379,11 @@ body {
   margin-bottom: 40px;
 }
 
-.trade-form {
-  margin: 0 auto;
-  max-width: 950px;
-}
-
-.trade-controls {
-  margin-bottom: 20px;
-}
-
-.trade-controls input {
-  padding: 10px;
-  font-size: 18px;
-  border: 2px solid #000;
-  border-radius: 30px;
-  width: 300px;
-  margin-top: 10px;
-}
-
 .trade-card-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 50px;
+  gap: 40px;
   margin: 40px 0;
   flex-wrap: wrap;
 }
@@ -454,30 +396,6 @@ body {
   min-height: 270px;
 }
 
-.card-title {
-  font-weight: bold;
-  background-color: #ffeeee;
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 20px;
-  margin-bottom: 10px;
-  font-size: 18px;
-}
-
-.poke-name {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-.poke-name-input {
-  font-size: 16px;
-  padding: 6px 10px;
-  margin-bottom: 10px;
-  border-radius: 20px;
-  border: 1px solid #000;
-}
-
 .trade-card img {
   width: 120px;
   height: 120px;
@@ -486,107 +404,7 @@ body {
   border-radius: 20px;
 }
 
-.arrow {
-  font-size: 28px;
-}
-
-.request-trade-btn {
-  background-color: #f4c400;
-  border: none;
-  padding: 10px 28px;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 30px;
-  cursor: pointer;
-}
-
-.trades-column {
-  margin-top: 60px;
-  text-align: left;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.trades-column h2 {
-  font-size: 24px;
-  margin-top: 40px;
-}
-
-.open-trade {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 12px 0;
-}
-
-.view-btn {
-  background-color: #f4c400;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-weight: bold;
-  border: none;
-  margin-left: 12px;
-}
-
-.trade-card-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  margin-top: 30px;
-  flex-wrap: wrap;
-}
-
-.trade-card {
-  background-color: #f4c400;
-  padding: 20px;
-  border-radius: 40px;
-  width: 220px;
-  text-align: center;
-  min-height: 260px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-title {
-  font-weight: bold;
-  font-size: 16px;
-  background-color: #fff3f3;
-  border-radius: 20px;
-  padding: 4px 12px;
-  display: inline-block;
-  margin-bottom: 10px;
-}
-
-.trade-card img {
-  width: 100px;
-  height: 100px;
-  margin-top: 10px;
-  object-fit: contain;
-  background: white;
-  border-radius: 20px;
-}
-
-.poke-name,
-.poke-name-input {
-  font-weight: bold;
-  font-size: 18px;
-  margin: 10px 0;
-}
-
-.poke-name-input {
-  padding: 6px 12px;
-  border: 2px solid #000;
-  border-radius: 20px;
-  width: 80%;
-}
-
-.arrow {
-  font-size: 32px;
-  text-align: center;
-  line-height: 1.2;
-}
-
+/* SIGNUP */
 .signup-wrapper {
   display: flex;
   flex-direction: column;
@@ -594,20 +412,12 @@ body {
   justify-content: center;
   padding: 40px 20px;
   min-height: 100vh;
-  background-color: #fff3f3;
-  box-sizing: border-box;
+  background-color: inherit;
 }
 
 .signup-center {
   max-width: 600px;
-  width: 100%;
   text-align: center;
-}
-
-.signup-center h1,
-.signup-center h2 {
-  font-family: 'Georgia', serif;
-  margin-bottom: 10px;
 }
 
 .title {
@@ -635,8 +445,8 @@ body {
 .signup-form input {
   padding: 10px;
   font-size: 16px;
-  width: 100%;
   max-width: 400px;
+  width: 100%;
   border: 2px solid #333;
   border-radius: 8px;
 }
