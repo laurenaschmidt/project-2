@@ -483,37 +483,43 @@ body {
   height: auto;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.home-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+.home-title {
+  text-align: center;
+  width: 100%;
 }
 
-.animate-title {
-  opacity: 0;
-  animation: fadeInUp 1s ease-out forwards;
-}
-
-.typewriter-title {
-  overflow: hidden;             /* Ensures only what's typed shows */
-  border-right: 2px solid #d62828; /* Optional blinking cursor */
+.typewriter {
+  display: inline-block;
+  overflow: hidden;
+  border-right: 3px solid #d62828; /* cursor */
   white-space: nowrap;
-  animation: typing 1.5s steps(10, end), blink-caret 0.75s step-end infinite;
+  animation:
+    typing 2s steps(9) forwards,
+    blink 0.7s step-end 6; /* 3 blinks = 6 half-cycles */
+  width: 0;
   font-family: 'Georgia', serif;
-  font-weight: bold;
+  font-size: 64px;
+  color: #d62828;
+  text-align: center;
+  margin: 0 auto;
+  animation-fill-mode: forwards;
 }
 
+/* Typing animation */
 @keyframes typing {
-  from { width: 0 }
-  to { width: 10ch } /* Adjust this number to match letter count */
+  from { width: 0; }
+  to { width: 10ch; }
 }
 
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #d62828; }
+/* Cursor blink animation */
+@keyframes blink {
+  50% { border-color: transparent; }
 }
+

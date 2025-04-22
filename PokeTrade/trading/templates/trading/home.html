@@ -5,21 +5,9 @@
 <div class="home-page">
   <!-- HEADER -->
   <div class="home-header">
-    <img src="{% static 'images/pokemon_logo.png' %}" alt="Pokemon Logo" class="logo">
     <div class="home-title">
-      <h1 class="typewriter-title poke-title">POKETRADE</h1>
-      <p class="credit-line">Created by Lauren, Emma, Ava, and Shreya</p>
-    </div>
-    <div class="auth-links">
-      {% if user.is_authenticated %}
-        <form action="{% url 'trading:logout' %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="auth-button">Logout</button>
-        </form>
-      {% else %}
-        <a href="{% url 'trading:login' %}" class="auth-button">Login</a>
-        <a href="{% url 'trading:signup' %}" class="auth-button">Sign Up</a>
-      {% endif %}
+      <h1><span class="typewriter">POKETRADE</span></h1>
+        <p class="credit-line">Created by Lauren, Emma, Ava, and Shreya</p>
     </div>
   </div>
 
