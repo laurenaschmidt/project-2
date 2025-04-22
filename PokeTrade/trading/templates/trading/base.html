@@ -6,6 +6,8 @@
     <title>{% block title %}PokéTrade{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <!-- Add Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <nav>
@@ -30,5 +32,7 @@
     <div class="content">
         {% block content %}{% endblock %}
     </div>
+<!-- Add Bootstrap 5 JS (for modals, dropdowns, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
