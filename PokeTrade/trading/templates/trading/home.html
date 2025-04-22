@@ -2,35 +2,35 @@
 {% load static %}
 {% block content %}
 
-<div class="home-page home-layout">
-  <!-- LEFT COLUMN: Pokémon for Sale -->
-  <div class="sale-column">
-    <h2>Pokémon for Sale</h2>
-    <ul class="sale-list">
-      {% for sale in pokemons_for_sale %}
-        <li>{{ sale.pokemon.name }} — Seller: {{ sale.seller.user.username }} — ${{ sale.price }}</li>
-      {% empty %}
-        <li>No Pokémon currently listed for sale.</li>
-      {% endfor %}
-    </ul>
+<div class="home-page">
+  <!-- HEADER -->
+  <div class="home-header">
+    <div class="home-title">
+      <h1><span class="typewriter">POKETRADE</span></h1>
+        <p class="credit-line">Created by Lauren, Emma, Ava, and Shreya</p>
+    </div>
   </div>
 
-  <!-- RIGHT COLUMN: Header + Navigation -->
-  <div class="main-column">
-    <div class="home-header">
-      <div class="home-title">
-        <h1><span class="typewriter">POKETRADE</span></h1>
-        <p class="credit-line">Created by Lauren, Emma, Ava, and Shreya</p>
-      </div>
-    </div>
-
-    <div class="nav-box">
-      <a href="{% url 'trading:profile' %}" class="nav-button">PROFILE</a>
-      <a href="{% url 'trading:trade_list' %}" class="nav-button">TRADING</a>
-      <a href="{% url 'trading:marketplace' %}" class="nav-button">MARKET</a>
-      <a href="{% url 'trading:leaderboard' %}" class="nav-button">LEADERS</a>
-    </div>
+  <!-- MAIN NAV BUTTONS -->
+  <div class="nav-box">
+    <a href="{% url 'trading:profile' %}" class="nav-button">PROFILE</a>
+    <a href="{% url 'trading:trade_list' %}" class="nav-button">TRADING</a>
+    <a href="{% url 'trading:marketplace' %}" class="nav-button">MARKET</a>
+    <a href="{% url 'trading:leaderboard' %}" class="nav-button">LEADERS</a>
   </div>
 </div>
+
+<!-- Pokémon for Sale Jumbotron -->
+<div class="sale-jumbotron">
+  <h2>Pokémon for Sale</h2>
+  <ul class="sale-list">
+    {% for sale in pokemons_for_sale %}
+      <li>{{ sale.pokemon.name }} — Seller: {{ sale.seller.user.username }} — ${{ sale.price }}</li>
+    {% empty %}
+      <li>No Pokémon currently listed for sale.</li>
+    {% endfor %}
+  </ul>
+</div>
+
 
 {% endblock %}

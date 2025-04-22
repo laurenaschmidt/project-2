@@ -11,17 +11,17 @@
   <div class="podium">
     <div class="podium-second">
       <img class="podium-icon" src="{% static 'images/silver.png' %}" alt="2nd Place">
-      <p>{{ top_users.1.user.username }}</p>
+      <p><span class="jitter">{{ top_users.1.user.username }}</span></p>
     </div>
 
     <div class="podium-first">
       <img class="podium-icon" src="{% static 'images/gold.png' %}" alt="1st Place">
-      <p>{{ top_users.0.user.username }}</p>
+      <p><span class="jitter">{{ top_users.0.user.username }}</span></p>
     </div>
 
     <div class="podium-third">
       <img class="podium-icon" src="{% static 'images/bronze.png' %}" alt="3rd Place">
-      <p>{{ top_users.2.user.username }}</p>
+      <p><span class="jitter">{{ top_users.2.user.username }}</span></p>
     </div>
   </div>
 
