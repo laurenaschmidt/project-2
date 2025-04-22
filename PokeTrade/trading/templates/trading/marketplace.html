@@ -42,12 +42,12 @@
         {% csrf_token %}
         <button class="favorite-btn" type="submit">
           {% if pokemon in user_profile.favorite_pokemon.all %}
-            FAVORITE <span>🖤</span>
+            Unfavorite <span>💔</span>
           {% else %}
-            FAVORITE <span>🤍</span>
+            Favorite <span>💙</span>
           {% endif %}
         </button>
-      </form>
+    </form>
 
       <form method="post" action="{% url 'trading:buy_pokemon' pokemon.id %}">
         {% csrf_token %}

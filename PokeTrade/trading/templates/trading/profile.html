@@ -23,11 +23,13 @@
     <div class="favorites-section">
       <h2 class="favorites-title">Favorited Pokémon:</h2>
       <ul class="favorites-list">
-        {% for fav in favorites %}
-          <li>{{ fav.pokemon.name }}</li>
-        {% empty %}
+        {% if favorites %}
+          {% for pokemon in favorites %}
+            <li>{{ pokemon.name }}</li>
+          {% endfor %}
+        {% else %}
           <li>No favorites yet.</li>
-        {% endfor %}
+        {% endif %}
       </ul>
     </div>
     <a href="{% url 'trading:wishlist' %}">View Wishlist</a>

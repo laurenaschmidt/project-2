@@ -18,8 +18,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
-    favorite_pokemon = models.ForeignKey(Pokemon, on_delete=models.SET_NULL, null=True, blank=True, related_name='favorited_by')
-    collection = models.ManyToManyField(Pokemon, related_name='collected_by', blank=True)
+    favorite_pokemon = models.ManyToManyField(Pokemon, related_name='favorited_by', blank=True)  
     owned_pokemon = models.ManyToManyField(Pokemon, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=30.00)
 

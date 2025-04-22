@@ -65,7 +65,12 @@ def leaderboard(request):
 @login_required
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    # favorites = Favorite.objects.filter(user=request.user).select_related('pokemon')
+    # favorites = Favorite.objects.filter(user=request.user).values_list('pokemon__name', flat=True)
     favorites = Favorite.objects.filter(user=request.user).select_related('pokemon')
+    favorited_pokemon = Pokemon.objects.filter(favorited_by__user=request.user)
+
+
     owned_pokemon = user_profile.owned_pokemon.all()
     type_counts = Counter(pokemon.type for pokemon in owned_pokemon)
     total_owned = owned_pokemon.count()
@@ -86,7 +91,7 @@ def profile(request):
         'most_common_type': most_common_type,
         'total_owned': total_owned,
         'unique_types': unique_types,
-        'favorites': favorites,
+        'favorites': favorited_pokemon,
     }
 
     return render(request, 'trading/profile.html', context)
@@ -184,13 +189,24 @@ def signup(request):
         form = CustomSignupForm()
     return render(request, 'trading/signup.html', {'form': form})
 
+from django.shortcuts import redirect, get_object_or_404
+from .models import UserProfile, Pokemon, Favorite
 
+@login_required
 def favorite_pokemon(request, pokemon_id):
     if request.method == "POST":
+
         user_profile = get_object_or_404(UserProfile, user=request.user)
         pokemon = get_object_or_404(Pokemon, id=pokemon_id)
-        Favorite.objects.create(user=request.user, pokemon=pokemon)
-        user_profile.favorite_pokemon = pokemon
+
+        # Check if the pokemon is already in favorites
+        if pokemon in user_profile.favorite_pokemon.all():
+            # If already favorited, unfavorite it
+            user_profile.favorite_pokemon.remove(pokemon)
+        else:
+            # If not favorited, favorite it
+            user_profile.favorite_pokemon.add(pokemon)
+
         user_profile.save()
         return redirect('trading:profile')
 
