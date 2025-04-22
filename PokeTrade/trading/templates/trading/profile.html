@@ -25,7 +25,7 @@
         {% endfor %}
       </ul>
     </div>
-
+    <a href="{% url 'trading:wishlist' %}">View Wishlist</a>
     <a class="edit-profile" href="{% url 'trading:update_profile' %}">Edit Profile</a>
   </div>
 
@@ -33,7 +33,7 @@
   <div class="right-column">
     <h2 class="collection-header">MY COLLECTION</h2>
     <div class="pokemon-grid">
-      {% for pokemon in user_profile.owned_pokemon.all %}
+      {% for pokemon in user_profile.owned_pokemon.all|slice:":5" %}
         <div class="pokemon-box">
           {% if pokemon.image %}
             <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
@@ -44,38 +44,38 @@
             <button type="submit">Release</button>
           </form>
           <form action="{% url 'trading:list_pokemon_for_sale' pokemon.id %}" method="POST">
-    {% csrf_token %}
-    <input type="number" step="1.00" name="price" placeholder="Enter price" required>
-    <button type="submit">List for Sale</button>
-</form>
+            {% csrf_token %}
+            <input type="number" step="1.00" name="price" placeholder="Enter price" required>
+            <button type="submit">List for Sale</button>
+          </form>
         </div>
       {% endfor %}
 
-      <div class="pokemon-box view-more">
-        <p>VIEW MORE</p>
-      </div>
+      {% if user_profile.owned_pokemon.count >= 6 %}
+        <div class="pokemon-box view-more">
+          <p><a href="#">VIEW MORE</a></p>
+        </div>
+      {% endif %}
     </div>
+
 
     <!-- STATS -->
-  <div class="stats-block">
-    <div class="stat-row">
-      <p class="stat-left"><strong>Total Pokémon Owned:</strong> {{ total_owned }}</p>
-      <p class="stat-right"><strong>Unique Types Owned:</strong> {{ unique_types }}</p>
-    </div>
-    <p><strong>Most Common Type:</strong> {{ most_common_type }}</p>
-    <div class="type-breakdown">
-      {% for type, percentage in type_percentages.items %}
-        <div class="type-row">
-          <span class="type-label">{{ type }}</span>
-          <span class="type-percent">{{ percentage|floatformat:1 }}%</span>
-        </div>
-      {% endfor %}
+    <div class="stats-block">
+      <div class="stat-row">
+        <p class="stat-left"><strong>Total Pokémon Owned:</strong> {{ total_owned }}</p>
+        <p class="stat-right"><strong>Unique Types Owned:</strong> {{ unique_types }}</p>
+      </div>
+      <p><strong>Most Common Type:</strong> {{ most_common_type }}</p>
+      <div class="type-breakdown">
+        {% for type, percentage in type_percentages.items %}
+          <div class="type-row">
+            <span class="type-label">{{ type }}</span>
+            <span class="type-percent">{{ percentage|floatformat:1 }}%</span>
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-  </div>
-
-  <!-- profile.html or wherever your profile is rendered -->
-<a href="{% url 'trading:wishlist' %}">View Wishlist</a>
 
 </div>
 {% endblock %}

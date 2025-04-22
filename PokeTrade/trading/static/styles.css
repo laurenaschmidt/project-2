@@ -18,10 +18,10 @@ body {
 /* PROFILE PAGE */
 .profile-container {
   display: flex;
+  align-items: stretch; /* makes children same height */
   gap: 50px;
   padding: 40px;
   justify-content: center;
-  align-items: flex-start;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -63,9 +63,11 @@ body {
   background-color: #f4c400;
   padding: 30px;
   border-radius: 40px;
-  max-width: 700px;
+  max-width: 850px; /* was 700px */
   width: 100%;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .collection-header {
@@ -80,6 +82,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 25px;
+  margin-bottom: 20px;
 }
 
 .pokemon-box {
@@ -121,6 +124,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  grid-column: span 3;
 }
 
 /* HOME HEADER + NAVIGATION */
@@ -521,5 +525,86 @@ body {
 /* Cursor blink animation */
 @keyframes blink {
   50% { border-color: transparent; }
+}
+
+/* login.css */
+
+body {
+  background-color: #ffffff;
+  font-family: 'Georgia', serif;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  margin: 80px auto;
+  background-color: #f4c400; /* Bright yellow box */
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  color: #000000;
+}
+
+.form-signin h1 {
+  margin-bottom: 30px;
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form-signin label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: none;
+  background-color: #fefefe;
+  font-size: 16px;
+}
+
+.form-signin input:focus {
+  outline: 2px solid #d62828;
+}
+
+.form-check {
+  margin-top: 15px;
+}
+
+.form-check-label {
+  font-size: 14px;
+}
+
+.btn-primary {
+  width: 100%;
+  margin-top: 25px;
+  background-color: #d62828;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #b71c1c;
+}
+
+.wishlist-link {
+  text-align: center;
+  margin-top: 20px;
+}
+.wishlist-link a {
+  font-weight: bold;
+  color: #0077cc;
+  text-decoration: none;
+}
+.wishlist-link a:hover {
+  text-decoration: underline;
 }
 
