@@ -701,3 +701,17 @@ body {
   animation: slideFadeIn 0.5s ease forwards;
   opacity: 0; /* initial state before animation */
 }
+.yellow-jumbotron {
+  background-color: #f4c400;
+  padding: 40px 30px;
+  margin-top: 40px;
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.yellow-jumbotron h2 {
+  font-size: 32px;
+  font-family: 'Georgia', serif;
+  color: #000;
+  margin-bottom: 20px;
+}

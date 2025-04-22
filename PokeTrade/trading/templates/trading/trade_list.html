@@ -94,52 +94,52 @@
 {% endif %}
   </form>
   </div>
-<h2>Find Local Trading Conventions</h2>
-<div id="map" style="height: 400px; width: 100%; margin-top: 1rem; border-radius: 12px;"></div>
-  <!-- Your Trades -->
-  <div class="trades-column">
-    <h2>TRADES SENT</h2>
-    {% for trade in user_trades %}
-      <p>{{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} - {{ trade.timestamp|date:"n/j/y" }}</p>
-    {% empty %}
-      <p>No trades yet.</p>
-    {% endfor %}
 
-    <h2>OPEN TRADE OFFERS</h2>
+<!-- Open Trade Offers -->
+<div class="yellow-jumbotron">
+  <h2>OPEN TRADE OFFERS</h2>
 
-    <form method="get" action="{% url 'trading:trade_offers' %}" style="margin-bottom: 10px;">
-      <label for="user_filter">Filter by user:</label>
-      <select name="user" id="user_filter">
-        <option value="">-- All Users --</option>
-        {% for other in other_users_with_trades_to_me %}
+  <form method="get" action="{% url 'trading:trade_offers' %}" style="margin-bottom: 10px;">
+    <label for="user_filter">Filter by user:</label>
+    <select name="user" id="user_filter">
+      <option value="">-- All Users --</option>
+      {% for other in other_users_with_trades_to_me %}
         <option value="{{ other.id }}" {% if request.GET.user == other.id|stringformat:"s" %}selected{% endif %}>
           {{ other.user.username }}
         </option>
-        {% endfor %}
-      </select>
-      <button type="submit">Apply</button>
-    </form>
-    {% for trade in available_trades %}
-      <div class="open-trade">
-        <p>{{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} - {{ trade.sender.user.username }}</p>
-        {% if trade.receiver.id == user_profile.id and not trade.accepted %}
-  <form method="post" action="{% url 'trading:accept_trade' trade.id %}" style="display:inline;">
-    {% csrf_token %}
-    <button class="view-btn" type="submit">ACCEPT</button>
+      {% endfor %}
+    </select>
+    <button type="submit">Apply</button>
   </form>
 
-  <form method="post" action="{% url 'trading:reject_trade' trade.id %}" style="display:inline;">
-    {% csrf_token %}
-    <button class="reject-btn" type="submit">REJECT</button>
-  </form>
-{% endif %}
-      </div>
-    {% empty %}
-      <p>No open trades.</p>
-    {% endfor %}
-  </div>
-
+  {% for trade in available_trades %}
+    <div class="open-trade">
+      <p>{{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} - {{ trade.sender.user.username }}</p>
+      {% if trade.receiver.id == user_profile.id and not trade.accepted %}
+        <form method="post" action="{% url 'trading:accept_trade' trade.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button class="view-btn" type="submit">ACCEPT</button>
+        </form>
+        <form method="post" action="{% url 'trading:reject_trade' trade.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button class="reject-btn" type="submit">REJECT</button>
+        </form>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p>No open trades.</p>
+  {% endfor %}
+  <h2>TRADES SENT</h2>
+  {% for trade in user_trades %}
+    <p>{{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} - {{ trade.timestamp|date:"n/j/y" }}</p>
+  {% empty %}
+    <p>No trades yet.</p>
+  {% endfor %}
 </div>
+
+<h2>Find Local Trading Conventions</h2>
+<div id="map" style="height: 400px; width: 100%; margin-top: 1rem; border-radius: 12px;"></div>
+
 
 <!-- JavaScript for dynamic dropdown -->
 <script>
