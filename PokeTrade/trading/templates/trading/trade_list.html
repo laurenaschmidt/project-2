@@ -95,8 +95,7 @@
   </form>
   </div>
 
-<!-- Open Trade Offers -->
-<div class="yellow-jumbotron">
+<div class="centered-trades">
   <h2>OPEN TRADE OFFERS</h2>
 
   <form method="get" action="{% url 'trading:trade_offers' %}" style="margin-bottom: 10px;">
@@ -120,6 +119,7 @@
           {% csrf_token %}
           <button class="view-btn" type="submit">ACCEPT</button>
         </form>
+
         <form method="post" action="{% url 'trading:reject_trade' trade.id %}" style="display:inline;">
           {% csrf_token %}
           <button class="reject-btn" type="submit">REJECT</button>
@@ -128,12 +128,6 @@
     </div>
   {% empty %}
     <p>No open trades.</p>
-  {% endfor %}
-  <h2>TRADES SENT</h2>
-  {% for trade in user_trades %}
-    <p>{{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} - {{ trade.timestamp|date:"n/j/y" }}</p>
-  {% empty %}
-    <p>No trades yet.</p>
   {% endfor %}
 </div>
 

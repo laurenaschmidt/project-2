@@ -32,8 +32,8 @@
         {% endif %}
       </ul>
     </div>
-    <a href="{% url 'trading:wishlist' %}">View Wishlist</a>
-    <a class="edit-profile" href="{% url 'trading:update_profile' %}">Edit Profile</a>
+    <a href="{% url 'trading:wishlist' %}" class="profile-button">View Wishlist</a>
+    <a href="{% url 'trading:update_profile' %}" class="profile-button">Edit Profile</a>
   </div>
 
   <!-- RIGHT COLUMN -->
@@ -43,18 +43,22 @@
       {% for pokemon in user_profile.owned_pokemon.all|slice:":6" %}
         <div class="pokemon-box">
           {% if pokemon.image %}
-            <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
-          {% endif %}
-          <p>{{ pokemon.name }}</p>
-          <form method="post" action="{% url 'trading:release_pokemon' pokemon.id %}">
-            {% csrf_token %}
-            <button type="submit">Release</button>
-          </form>
-          <form action="{% url 'trading:list_pokemon_for_sale' pokemon.id %}" method="POST">
-            {% csrf_token %}
-            <input type="number" step="1.00" name="price" placeholder="Enter price" required>
-            <button type="submit">List for Sale</button>
-          </form>
+          <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+        {% endif %}
+        <p class="pokemon-name">{{ pokemon.name }}</p>
+
+        <form method="post" action="{% url 'trading:release_pokemon' pokemon.id %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">Release</button>
+        </form>
+
+        <form method="post" action="{% url 'trading:list_pokemon_for_sale' pokemon.id %}" class="d-inline">
+          {% csrf_token %}
+          <div class="d-flex gap-2 mt-2 align-items-center">
+            <input type="number" name="price" placeholder="$" required class="form-control form-control-sm price-input">
+            <button type="submit" class="btn btn-warning btn-sm">List</button>
+          </div>
+        </form>
         </div>
       {% endfor %}
 

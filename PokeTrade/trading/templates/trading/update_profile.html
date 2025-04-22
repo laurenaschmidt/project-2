@@ -1,17 +1,25 @@
-
+{% extends 'trading/base.html' %}
+{% load static %}
 {% block content %}
-    <h1>Update Profile</h1>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label for="bio">Bio:</label>
-        <textarea name="bio" id="bio">{{ user_profile.bio }}</textarea><br><br>
+<div class="edit-profile-wrapper">
+  <div class="edit-profile-box">
+    <h1 class="edit-title">Update Your Profile</h1>
 
-        {% csrf_token %}
-        <label for="profile_picture">Profile Picture:</label>
-        <input type="file" name="profile_picture" id="profile_picture"><br><br>
-        {% csrf_token %}
-        <button type="submit">Update Profile</button>
+    <form method="POST" enctype="multipart/form-data" class="edit-form">
+      {% csrf_token %}
+      
+      <label for="bio"><strong>Bio:</strong></label>
+      <textarea name="bio" id="bio">{{ user_profile.bio }}</textarea>
+
+      <label for="profile_picture"><strong>Profile Picture:</strong></label>
+      <input type="file" name="profile_picture" id="profile_picture">
+
+      <button type="submit" class="btn-red">Update Profile</button>
     </form>
-    <a href="{% url 'trading:profile' %}">Cancel</a>
+
+    <a href="{% url 'trading:profile' %}" class="btn-cancel">Cancel</a>
+  </div>
+</div>
+
 {% endblock %}
