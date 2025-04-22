@@ -1,18 +1,20 @@
 {% extends 'trading/base.html' %}
 {% block content %}
-
-<h1>🔔 Notifications</h1>
-
-{% if notifications %}
-  <ul>
-    {% for notification in notifications %}
-      <li>
-        {{ notification.timestamp|date:"M d, Y H:i" }} – {{ notification.message }}
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No notifications.</p>
-{% endif %}
-
+<div class="notifications-container">
+  <div class="notification-box">
+    <h1 class="notifications-title">🔔 Notifications</h1>
+    {% if notifications %}
+      <ul class="notification-list">
+        {% for note in notifications %}
+          <li class="notification-item">
+            <strong>{{ note.timestamp|date:"M d, Y H:i" }}</strong><br>
+            <span>{{ note.message }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="no-notifications">No notifications yet.</p>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

@@ -16,6 +16,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('update_profile/', views.update_profile, name='update_profile'),
     path('profile/<str:username>/', views.view_user_profile, name='view_user_profile'),
+    path('collection/', views.full_collection, name='full_collection'),
 
     # Marketplace
     path('marketplace/', views.marketplace, name='marketplace'),

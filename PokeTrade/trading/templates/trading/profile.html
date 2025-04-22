@@ -33,7 +33,7 @@
   <div class="right-column">
     <h2 class="collection-header">MY COLLECTION</h2>
     <div class="pokemon-grid">
-      {% for pokemon in user_profile.owned_pokemon.all|slice:":5" %}
+      {% for pokemon in user_profile.owned_pokemon.all|slice:":6" %}
         <div class="pokemon-box">
           {% if pokemon.image %}
             <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
@@ -51,9 +51,9 @@
         </div>
       {% endfor %}
 
-      {% if user_profile.owned_pokemon.count >= 6 %}
+      {% if user_profile.owned_pokemon.count > 6 %}
         <div class="pokemon-box view-more">
-          <p><a href="#">VIEW MORE</a></p>
+          <a href="{% url 'trading:full_collection' %}">VIEW MORE</a>
         </div>
       {% endif %}
     </div>

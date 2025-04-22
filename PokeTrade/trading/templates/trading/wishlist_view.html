@@ -1,37 +1,46 @@
 {% extends 'trading/base.html' %}
+{% load static %}
 {% block content %}
-  <div class="wishlist-page">
-    <h1>{{ request.user.username }}'s Wishlist</h1>
 
-    {% if wishlist.pokemon.all %}
-      <ul class="wishlist-grid">
-        {% for pokemon in wishlist.pokemon.all %}
-          <li class="wishlist-card">
-            <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
-            <p>{{ pokemon.name }}</p>
-            <form action="{% url 'trading:remove_from_wishlist' pokemon.id %}" method="post">
-              {% csrf_token %}
-              <button type="submit">Remove</button>
-            </form>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>Your wishlist is empty.</p>
-    {% endif %}
-    <h2>Add Pokémon to your Wishlist</h2>
-<ul class="pokemon-list">
-  {% for pokemon in all_pokemon %}
-    <li class="pokemon-card">
+<div class="marketplace-container">
+  <!-- Page Title -->
+  <h1 class="marketplace-heading">{{ request.user.username|upper }}'s <span class="poke-title">WISHLIST</span></h1>
+
+  <!-- Wishlist Cards -->
+  {% if wishlist.pokemon.all %}
+    <div class="marketplace-pokemon-grid">
+      {% for pokemon in wishlist.pokemon.all %}
+      <div class="marketplace-card">
+        <h2>{{ pokemon.name|upper }}</h2>
+        <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+
+        <form action="{% url 'trading:remove_from_wishlist' pokemon.id %}" method="post">
+          {% csrf_token %}
+          <button class="buy-btn" type="submit">Remove</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Your wishlist is empty.</p>
+  {% endif %}
+
+  <!-- Add Pokémon to Wishlist Section -->
+  <h2 class="marketplace-heading">ADD <span class="poke-title">POKÉMON</span> TO YOUR WISHLIST</h2>
+  <div class="marketplace-pokemon-grid">
+    {% for pokemon in all_pokemon %}
+    <div class="marketplace-card">
+      <h2>{{ pokemon.name|upper }}</h2>
       <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
-      <p>{{ pokemon.name }}</p>
-      <form method="POST" style="display:inline;">
+
+      <form method="POST">
         {% csrf_token %}
         <input type="hidden" name="pokemon_id" value="{{ pokemon.id }}">
-        <button type="submit">Add to Wishlist</button>
+        <button class="buy-btn" type="submit">Add to Wishlist</button>
       </form>
-    </li>
-  {% endfor %}
-</ul>
+    </div>
+    {% endfor %}
   </div>
+</div>
+
 {% endblock %}

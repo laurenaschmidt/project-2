@@ -1,0 +1,20 @@
+{% extends 'trading/base.html' %}
+{% block content %}
+<div class="profile-container">
+  <div class="right-column">
+    <h2 class="collection-header">{{ user_profile.user.username|upper }}'s Full Collection</h2>
+    <div class="pokemon-grid">
+      {% for pokemon in pokemons %}
+        <div class="pokemon-box">
+          {% if pokemon.image %}
+            <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+          {% endif %}
+          <p>{{ pokemon.name }}</p>
+        </div>
+      {% empty %}
+        <p>You don't have any Pokémon yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

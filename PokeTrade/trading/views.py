@@ -19,10 +19,11 @@ from .utils import fetch_pokemon
 
 
 @login_required
+@login_required
 def home(request):
     pokemons_for_sale = Sale.objects.all()
     context = {'pokemons_for_sale': pokemons_for_sale}
-    return render(request, 'trading/home.html')
+    return render(request, 'trading/home.html', context)
 
 
 def import_pokemon(request, pokemon_name):
@@ -73,13 +74,22 @@ def profile(request):
     type_percentages = {
         t: (count / total_owned) * 100 for t, count in type_counts.items()
     } if total_owned else {}
-    context = {'user_profile': user_profile, 'type_percentages': type_percentages,
+
+    # ✅ Toast logic for pending trade requests
+    pending_trades = Trade.objects.filter(receiver=user_profile, accepted=False)
+    if pending_trades.exists():
+        messages.info(request, f"You have {pending_trades.count()} trade request(s) waiting!")
+
+    context = {
+        'user_profile': user_profile,
+        'type_percentages': type_percentages,
         'most_common_type': most_common_type,
         'total_owned': total_owned,
         'unique_types': unique_types,
-        'favorites': favorites,}
-    return render(request, 'trading/profile.html', context)
+        'favorites': favorites,
+    }
 
+    return render(request, 'trading/profile.html', context)
 
 @login_required
 def update_profile(request):
@@ -374,9 +384,9 @@ def wishlist_view(request):
     return render(request, 'trading/wishlist_view.html', context)
 
 @login_required
-def trade_offers_view(request, trade_id=None):  
+def trade_offers_view(request, trade_id=None):
     print("TRADE OFFERS VIEW")
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)  
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
     trades = Trade.objects.filter(receiver=user_profile, accepted=False)
     user_id = request.GET.get("user")
 
@@ -385,7 +395,7 @@ def trade_offers_view(request, trade_id=None):
             user_id = int(user_id)
             trades = trades.filter(sender__id=user_id, receiver=user_profile)
         except ValueError:
-            pass 
+            pass
 
     user_ids = Trade.objects.filter(
         accepted=False,
@@ -406,3 +416,12 @@ def remove_from_wishlist(request, pokemon_id):
     pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     wishlist.pokemon.remove(pokemon)
     return redirect('trading:wishlist')
+
+@login_required
+def full_collection(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    pokemons = user_profile.owned_pokemon.all()
+    return render(request, 'trading/full_collection.html', {
+        'pokemons': pokemons,
+        'user_profile': user_profile,
+    })
