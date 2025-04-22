@@ -31,17 +31,13 @@
     <ol class="ranking-list">
       {% for profile in top_users %}
         <li>
-          {{ forloop.counter }}. {{ profile.user.username }}
-          {% if forloop.counter == 1 %}
-            🥇
-          {% elif forloop.counter == 2 %}
-            🥈
-          {% elif forloop.counter == 3 %}
-            🥉
+          {% if forloop.counter == 1 %} 🥇
+          {% elif forloop.counter == 2 %} 🥈
+          {% elif forloop.counter == 3 %} 🥉
           {% endif %}
           <a href="{% url 'trading:view_user_profile' profile.user.username %}">
-  {{ profile.user.username }}
-</a> – {{ profile.owned_pokemon.count }} Pokémon
+            {{ profile.user.username }}
+          </a> – {{ profile.owned_pokemon.count }} Pokémon
         </li>
       {% endfor %}
     </ol>
