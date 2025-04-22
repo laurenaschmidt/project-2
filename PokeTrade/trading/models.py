@@ -21,6 +21,7 @@ class UserProfile(models.Model):
     favorite_pokemon = models.ForeignKey(Pokemon, on_delete=models.SET_NULL, null=True, blank=True, related_name='favorited_by')
     collection = models.ManyToManyField(Pokemon, related_name='collected_by', blank=True)
     owned_pokemon = models.ManyToManyField(Pokemon, blank=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=30.00)
 
     def __str__(self):
         return self.user.username

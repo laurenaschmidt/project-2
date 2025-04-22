@@ -13,7 +13,7 @@
       <input type="text" name="search" placeholder="Search" value="{{ request.GET.search }}">
       <button type="submit"><i class="fas fa-search"></i></button>
     </form>
-    <p class="account-balance">ACCOUNT BALANCE: {{ user_profile.balance }}</p>
+    <p class="account-balance">ACCOUNT BALANCE: ${{ user_profile.balance }}</p>
   </div>
 
   <!-- Pokémon Cards -->
@@ -22,7 +22,20 @@
     <div class="marketplace-card">
       <h2>{{ pokemon.name|upper }}</h2>
       <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
-      <p><strong>PRICE:</strong> {{ pokemon.price }}</p>
+      {% block price %}
+    {% if pokemon.id in sale_dict %}
+    {% for sale in sales %}
+      {% if sale.pokemon.id == pokemon.id %}
+      <p><strong>PRICE:</strong> ${{ sale.price }}</p>
+      {% endif %}
+    {% endfor %}
+      
+      
+    {% else %}
+      <p><strong>PRICE:</strong> --</p>
+    {% endif %}
+  {% endblock %}
+
       <p><strong>TYPE:</strong> {{ pokemon.type }}</p>
 
       <form method="post" action="{% url 'trading:favorite_pokemon' pokemon.id %}">
@@ -38,12 +51,18 @@
 
       <form method="post" action="{% url 'trading:buy_pokemon' pokemon.id %}">
         {% csrf_token %}
-        <button class="buy-btn" type="submit">BUY</button>
-      </form>
+        <button class="buy-btn" type="submit" {% if pokemon.id not in sale_dict %}disabled{% endif %}>
+            {% if pokemon.id in sale_dict %}
+                BUY
+            {% else %}
+                NOT FOR SALE
+            {% endif %}
+        </button>
+    </form>
     </div>
     {% endfor %}
   </div>
-  {% for sale in sales %}
+  <!-- {% for sale in sales %}
   <div class="pokemon-card">
       <p>{{ sale.pokemon.name }} (ID: {{ sale.pokemon.id }})</p>
       <p>Type: {{ sale.pokemon.type }}</p>
@@ -55,7 +74,7 @@
           <button type="submit">Buy Now</button>
       </form>
   </div>
-{% endfor %}
+{% endfor %} -->
 </div>
 
 {% endblock %}

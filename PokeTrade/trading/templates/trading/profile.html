@@ -14,6 +14,11 @@
     <h1 class="username">{{ request.user.username|upper }}'S PROFILE</h1>
     <p class="bio"><strong>Bio:</strong> {{ user_profile.bio }}</p>
 
+    <div class="account-balance-section">
+      <h3 class="account-balance-title">Account Balance</h3>
+      <p class="account-balance"><strong>Balance:</strong> ${{ user_profile.balance }}</p>
+    </div>
+    
     <!-- FAVORITES -->
     <div class="favorites-section">
       <h2 class="favorites-title">Favorited Pokémon:</h2>

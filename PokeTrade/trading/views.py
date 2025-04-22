@@ -120,9 +120,13 @@ def marketplace(request):
 
     sales = ForSale.objects.select_related('pokemon', 'seller').all()
 
+    # Prepare a dictionary for faster lookup of sales
+    sale_dict = {sale.pokemon.id: sale for sale in sales}
+
     context = {
         'pokemon_list': pokemon_list,
         'sales': sales,
+        'sale_dict': sale_dict, 
         'user_profile': user_profile,
     }
 
@@ -190,28 +194,52 @@ def favorite_pokemon(request, pokemon_id):
         user_profile.save()
         return redirect('trading:profile')
 
+from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
+from .models import UserProfile, Pokemon, ForSale
 
 @login_required
 def buy_pokemon(request, pokemon_id):
     pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     user_profile = UserProfile.objects.get(user=request.user)
 
+    # Check if the Pokémon is being sold by another user
     try:
-        # Check if the Pokémon is being sold by another user
         sale = ForSale.objects.get(pokemon=pokemon)
-
-        # Remove Pokémon from the seller's owned list
-        seller_profile = sale.seller
-        seller_profile.owned_pokemon.remove(pokemon)
-        seller_profile.save()
-        sale.delete()
-
     except ForSale.DoesNotExist:
-        pass
+        sale = None
 
+    # If the Pokémon is for sale, get the price
+    if sale:
+        price = sale.price
+    else:
+        messages.error(request, "This Pokémon is not for sale.")
+        return redirect('trading:marketplace')
+
+    # Check if the user has enough money
+    if user_profile.balance < price:
+        messages.error(request, "You do not have enough money to buy this Pokémon.")
+        return redirect('trading:marketplace')
+
+    # Subtract the price from the user's balance
+    user_profile.balance -= price
+    user_profile.save()
+
+    # Add the price to the seller's balance
+    seller_profile = sale.seller
+    seller_profile.balance += price
+    seller_profile.save()
+
+    # Remove Pokémon from the seller's owned list and complete the purchase
+    seller_profile.owned_pokemon.remove(pokemon)
+    seller_profile.save()
+    sale.delete()
+
+    # Add Pokémon to the user's owned list
     user_profile.owned_pokemon.add(pokemon)
     user_profile.save()
 
+    messages.success(request, f"You have successfully bought {pokemon.name}!")
     return redirect('trading:marketplace')
 
 def release_pokemon(request, pokemon_id):
