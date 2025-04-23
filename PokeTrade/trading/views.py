@@ -219,39 +219,33 @@ def buy_pokemon(request, pokemon_id):
     pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     user_profile = UserProfile.objects.get(user=request.user)
 
+    # ✅ Enforce 6 Pokémon max
+    if user_profile.owned_pokemon.count() >= 6:
+        messages.error(request, "You can only own up to 6 Pokémon.")
+        return redirect('trading:marketplace')
+
     # Check if the Pokémon is being sold by another user
     try:
         sale = ForSale.objects.get(pokemon=pokemon)
     except ForSale.DoesNotExist:
-        sale = None
-
-    # If the Pokémon is for sale, get the price
-    if sale:
-        price = sale.price
-    else:
         messages.error(request, "This Pokémon is not for sale.")
         return redirect('trading:marketplace')
 
-    # Check if the user has enough money
-    if user_profile.balance < price:
+    # Check user balance
+    if user_profile.balance < sale.price:
         messages.error(request, "You do not have enough money to buy this Pokémon.")
         return redirect('trading:marketplace')
 
-    # Subtract the price from the user's balance
-    user_profile.balance -= price
+    # Purchase process...
+    user_profile.balance -= sale.price
     user_profile.save()
 
-    # Add the price to the seller's balance
     seller_profile = sale.seller
-    seller_profile.balance += price
-    seller_profile.save()
-
-    # Remove Pokémon from the seller's owned list and complete the purchase
+    seller_profile.balance += sale.price
     seller_profile.owned_pokemon.remove(pokemon)
     seller_profile.save()
-    sale.delete()
 
-    # Add Pokémon to the user's owned list
+    sale.delete()
     user_profile.owned_pokemon.add(pokemon)
     user_profile.save()
 

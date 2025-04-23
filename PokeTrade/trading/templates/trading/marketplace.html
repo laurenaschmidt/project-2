@@ -52,14 +52,19 @@
 
       <form method="post" action="{% url 'trading:buy_pokemon' pokemon.id %}">
         {% csrf_token %}
-        <button class="buy-btn" type="submit" {% if pokemon.id not in sale_dict %}disabled{% endif %}>
+        <button class="buy-btn" type="submit"
+          {% if pokemon.id not in sale_dict or user_profile.owned_pokemon.count >= 6 %}disabled{% endif %}>
             {% if pokemon.id in sale_dict %}
-                BUY
+                {% if user_profile.owned_pokemon.count >= 6 %}
+                  MAX REACHED
+                {% else %}
+                  BUY
+                {% endif %}
             {% else %}
                 NOT FOR SALE
             {% endif %}
         </button>
-    </form>
+      </form>
     </div>
     {% endfor %}
   </div>
