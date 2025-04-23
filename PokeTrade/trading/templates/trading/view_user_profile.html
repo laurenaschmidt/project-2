@@ -1,54 +1,82 @@
 {% extends 'trading/base.html' %}
+{% load static %}
 {% block content %}
-  <h1>{{ user_profile.user.username }}'s Profile</h1>
 
-  {% if user_profile.profile_picture %}
-    <img src="{{ user_profile.profile_picture.url }}" style="width: 150px; height: 150px; border-radius: 50%;">
-  {% else %}
-    <p>No profile picture.</p>
-  {% endif %}
+<div class="profile-container">
 
-  <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+  <!-- LEFT COLUMN -->
+  <div class="left-column">
+    {% if user_profile.profile_picture %}
+      <img class="profile-pic" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+    {% else %}
+      <img class="profile-pic" src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
+    {% endif %}
 
-  <h3>Owned Pokémon:</h3>
-  <ul>
-    {% for pokemon in user_profile.owned_pokemon.all %}
-      <li>{{ pokemon.name }}</li>
-    {% endfor %}
-  </ul>
+    <h1 class="username">{{ user_profile.user.username|upper }}'S PROFILE</h1>
+    <p class="bio"><strong>Bio:</strong> {{ user_profile.bio }}</p>
 
-  <h2>Favorited Pokémon:</h2>
-<ul>
-    {% for fav in favorites %}
-        <li>{{ fav.pokemon.name }}</li>
-    {% empty %}
-        <li>No favorites yet.</li>
-    {% endfor %}
-</ul>
-<h2>Pokémon for Sale</h2>
-<ul>
-  {% for sale in pokemon_for_sale %}
-    <li>{{ sale.pokemon.name }} – ${{ sale.price }}</li>
-  {% empty %}
-    <li>No Pokémon currently for sale.</li>
-  {% endfor %}
-</ul>
+    <!-- FAVORITES -->
+    <div class="favorites-section">
+      <h2 class="favorites-title">Favorited Pokémon:</h2>
+      <ul class="favorites-list">
+        {% if favorites %}
+          {% for fav in favorites %}
+            <li>{{ fav.pokemon.name }}</li>
+          {% endfor %}
+        {% else %}
+          <li>No favorites yet.</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
 
-<h2>Trades Sent</h2>
-<ul>
-  {% for trade in trades_sent %}
-    <li>Offered {{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} (to {{ trade.receiver.user.username }})</li>
-  {% empty %}
-    <li>No trades sent.</li>
-  {% endfor %}
-</ul>
+  <!-- RIGHT COLUMN -->
+  <div class="right-column">
+    <h2 class="collection-header">OWNED POKÉMON</h2>
+    <div class="pokemon-grid">
+      {% for pokemon in user_profile.owned_pokemon.all %}
+        <div class="pokemon-box">
+          {% if pokemon.image %}
+            <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+          {% endif %}
+          <p class="pokemon-name">{{ pokemon.name }}</p>
+        </div>
+      {% endfor %}
+    </div>
 
-<h2>Trades Received</h2>
-<ul>
-  {% for trade in trades_received %}
-    <li>{{ trade.sender.user.username }} offered {{ trade.pokemon_offered.name }} for your {{ trade.pokemon_requested.name }}</li>
-  {% empty %}
-    <li>No trades received.</li>
-  {% endfor %}
-</ul>
+    <div class="white-jumbotron">
+      <h3>Pokémon for Sale</h3>
+      <ul>
+        {% for sale in pokemon_for_sale %}
+          <li>{{ sale.pokemon.name }} – ${{ sale.price }}</li>
+        {% empty %}
+          <li>No Pokémon currently for sale.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="white-jumbotron">
+      <h3>Trades Sent</h3>
+      <ul>
+        {% for trade in trades_sent %}
+          <li>Offered {{ trade.pokemon_offered.name }} for {{ trade.pokemon_requested.name }} (to {{ trade.receiver.user.username }})</li>
+        {% empty %}
+          <li>No trades sent.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="white-jumbotron">
+      <h3>Trades Received</h3>
+      <ul>
+        {% for trade in trades_received %}
+          <li>{{ trade.sender.user.username }} offered {{ trade.pokemon_offered.name }} for your {{ trade.pokemon_requested.name }}</li>
+        {% empty %}
+          <li>No trades received.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

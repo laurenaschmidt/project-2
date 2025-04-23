@@ -902,3 +902,29 @@ body {
   display: inline-block;
   animation: dance 1s infinite ease-in-out;
 }
+
+.collection-analytics-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.stats-box {
+  background-color: #f4c400;
+  padding: 20px;
+  border-radius: 20px;
+  min-width: 250px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stats-box .stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.type-breakdown .type-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+}
