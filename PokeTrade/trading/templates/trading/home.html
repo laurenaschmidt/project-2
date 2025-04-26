@@ -24,14 +24,9 @@
   <!-- Pokémon for Sale Jumbotron -->
 <!-- Full-width section -->
 <div style="width: 100%; background-color: #f4c400; padding: 40px 20px; margin-top: 30px; box-sizing: border-box;">
-  <h2 style="text-align: center; font-family: Georgia, serif; font-size: 36px; margin-bottom: 20px;">Pokémon for Sale</h2>
   <ul style="list-style: none; text-align: center; font-size: 20px; font-weight: bold; padding: 0;">
-    {% for sale in pokemons_for_sale %}
-      <li>{{ sale.pokemon.name }} — Seller: {{ sale.seller.user.username }} — ${{ sale.price }}</li>
-    {% empty %}
-      <li>No Pokémon currently listed for sale.</li>
-    {% endfor %}
   </ul>
 </div>
 
+</div>
 {% endblock %}

@@ -65,8 +65,6 @@ def leaderboard(request):
 @login_required
 def profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-    # favorites = Favorite.objects.filter(user=request.user).select_related('pokemon')
-    # favorites = Favorite.objects.filter(user=request.user).values_list('pokemon__name', flat=True)
     favorites = Favorite.objects.filter(user=request.user).select_related('pokemon')
     favorited_pokemon = Pokemon.objects.filter(favorited_by__user=request.user)
 
@@ -80,7 +78,6 @@ def profile(request):
         t: (count / total_owned) * 100 for t, count in type_counts.items()
     } if total_owned else {}
 
-    # ✅ Toast logic for pending trade requests
     pending_trades = Trade.objects.filter(receiver=user_profile, accepted=False)
     if pending_trades.exists():
         messages.info(request, f"You have {pending_trades.count()} trade request(s) waiting!")
@@ -124,8 +121,6 @@ def marketplace(request):
         pokemon_list = Pokemon.objects.all()
 
     sales = ForSale.objects.select_related('pokemon', 'seller').all()
-
-    # Prepare a dictionary for faster lookup of sales
     sale_dict = {sale.pokemon.id: sale for sale in sales}
 
     context = {
@@ -199,12 +194,12 @@ def favorite_pokemon(request, pokemon_id):
         user_profile = get_object_or_404(UserProfile, user=request.user)
         pokemon = get_object_or_404(Pokemon, id=pokemon_id)
 
-        # Check if the pokemon is already in favorites
+
         if pokemon in user_profile.favorite_pokemon.all():
-            # If already favorited, unfavorite it
+
             user_profile.favorite_pokemon.remove(pokemon)
         else:
-            # If not favorited, favorite it
+
             user_profile.favorite_pokemon.add(pokemon)
 
         user_profile.save()
@@ -219,24 +214,22 @@ def buy_pokemon(request, pokemon_id):
     pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     user_profile = UserProfile.objects.get(user=request.user)
 
-    # ✅ Enforce 6 Pokémon max
+
     if user_profile.owned_pokemon.count() >= 6:
         messages.error(request, "You can only own up to 6 Pokémon.")
         return redirect('trading:marketplace')
 
-    # Check if the Pokémon is being sold by another user
+
     try:
         sale = ForSale.objects.get(pokemon=pokemon)
     except ForSale.DoesNotExist:
         messages.error(request, "This Pokémon is not for sale.")
         return redirect('trading:marketplace')
 
-    # Check user balance
     if user_profile.balance < sale.price:
         messages.error(request, "You do not have enough money to buy this Pokémon.")
         return redirect('trading:marketplace')
 
-    # Purchase process...
     user_profile.balance -= sale.price
     user_profile.save()
 
@@ -303,11 +296,9 @@ def trade_list(request):
                 pass
 
             if action == 'compare':
-                # Just render the comparison view with context
                 return render(request, 'trading/trade_list.html', context)
 
             elif action == 'submit':
-                # Redirect to the create_trade view, passing Pokémon IDs via URL
                 return redirect('trading:create_trade', pokemon_offered_id=selected_offered.id, receiver_id=receiver_profile.id, pokemon_requested_id=selected_requested.id)
 
         return render(request, 'trading/trade_list.html', context)
@@ -325,7 +316,7 @@ def create_trade(request, pokemon_offered_id, receiver_id, pokemon_requested_id)
     pokemon_offered = get_object_or_404(Pokemon, id=pokemon_offered_id)
     pokemon_requested = get_object_or_404(Pokemon, id=pokemon_requested_id)
 
-    # Check if trade already exists? Optional.
+
     Trade.objects.create(
         sender=sender_profile,
         receiver=receiver_profile,
@@ -333,7 +324,7 @@ def create_trade(request, pokemon_offered_id, receiver_id, pokemon_requested_id)
         pokemon_requested=pokemon_requested,
     )
 
-    # Create a notification
+
     Notification.objects.create(
         user=receiver_profile,
         message=f"You received a trade offer from {request.user.username}: {pokemon_offered.name} for {pokemon_requested.name}"
