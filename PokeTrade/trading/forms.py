@@ -14,7 +14,6 @@ class CustomSignupForm(UserCreationForm):
 
     def clean_username(self):
         base_username = self.cleaned_data['username']
-        # Keep adding a suffix until it's unique
         while User.objects.filter(username=base_username).exists():
             suffix = ''.join(random.choices(string.digits, k=4))
             base_username = f"{self.cleaned_data['username']}_{suffix}"
