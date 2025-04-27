@@ -276,12 +276,23 @@ body {
 }
 
 .ranking-box {
-  background-color: inherit;
+  background-color: #f4c400; /* bright yellow! */
   padding: 30px;
   border-radius: 40px;
   width: 400px;
   margin: 0 auto;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  color: black;
+}
+
+.ranking-box a {
+  color: black;
+  text-decoration: none; /* optional: removes underline */
+  font-weight: bold; /* optional: makes it pop more */
+}
+
+.ranking-box a:hover {
+  text-decoration: underline; /* optional: underline on hover for clarity */
 }
 
 /* MARKETPLACE */
@@ -910,11 +921,11 @@ body {
 }
 
 .stats-box {
-  background-color: #f4c400;
+  background-color: white; /* <-- Change yellow to white */
   padding: 20px;
   border-radius: 20px;
   min-width: 250px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* soft shadow */
 }
 
 .stats-box .stat-row {
@@ -927,4 +938,85 @@ body {
   display: flex;
   justify-content: space-between;
   margin: 4px 0;
+}
+/* Animate trade cards */
+.trade-card {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeSlideIn 0.8s ease forwards;
+  animation-delay: 0.5s;
+}
+
+/* Animate the arrow */
+.arrow {
+  font-size: 2rem;
+  animation: arrowBounce 1.5s infinite ease-in-out;
+}
+
+/* Buttons bounce on hover */
+.request-trade-btn, .view-btn, .reject-btn {
+  transition: transform 0.2s ease;
+}
+
+.request-trade-btn:hover, .view-btn:hover, .reject-btn:hover {
+  transform: scale(1.08);
+}
+
+/* Animate the map */
+#map {
+  opacity: 0;
+  animation: fadeIn 1.2s ease forwards;
+  animation-delay: 1.2s;
+}
+
+/* Keyframes */
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.trade-title {
+  opacity: 0; /* Start invisible */
+  transform: scale(0.8);
+  animation: titlePopIn 1s ease forwards; /* ONE animation, then stay */
+  animation-delay: 0.2s;
+}
+
+/* Animation Keyframes */
+@keyframes titlePopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.poke-title {
+  display: inline-block;
+  animation: pokeBounce 2s ease-in-out infinite alternate;
+}
+
+@keyframes pokeBounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
 }
