@@ -282,9 +282,8 @@ body {
   width: 400px;
   margin: 0 auto;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  color: black;
+  color: black; /* make sure text stays visible */
 }
-
 .ranking-box a {
   color: black;
   text-decoration: none; /* optional: removes underline */
@@ -294,6 +293,7 @@ body {
 .ranking-box a:hover {
   text-decoration: underline; /* optional: underline on hover for clarity */
 }
+
 
 /* MARKETPLACE */
 .marketplace-container {
@@ -308,9 +308,10 @@ body {
 }
 
 .poke-title {
-  color: #d62828;
+  color: #d62828; /* red */
   font-size: 60px;
   font-weight: bold;
+  font-family: 'Georgia', serif;
 }
 
 .marketplace-top {
@@ -742,12 +743,6 @@ body {
   }
 }
 
-.bounce-in-once {
-  opacity: 0;
-  animation: bounceInOnce 0.8s ease-out forwards;
-  animation-delay: 0.3s;
-}
-
 .marketplace-card {
   opacity: 0;
   transform: translateY(30px);
@@ -939,6 +934,13 @@ body {
   justify-content: space-between;
   margin: 4px 0;
 }
+
+.trade-title {
+  opacity: 0; /* Start invisible */
+  transform: scale(0.8);
+  animation: titlePopIn 1s ease forwards; /* ONE animation, then stay */
+  animation-delay: 0.2s;
+}
 /* Animate trade cards */
 .trade-card {
   opacity: 0;
@@ -992,13 +994,6 @@ body {
   }
 }
 
-.trade-title {
-  opacity: 0; /* Start invisible */
-  transform: scale(0.8);
-  animation: titlePopIn 1s ease forwards; /* ONE animation, then stay */
-  animation-delay: 0.2s;
-}
-
 /* Animation Keyframes */
 @keyframes titlePopIn {
   0% {
@@ -1010,13 +1005,30 @@ body {
     transform: scale(1);
   }
 }
-
-.poke-title {
-  display: inline-block;
-  animation: pokeBounce 2s ease-in-out infinite alternate;
+@keyframes bounceInOnce {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes pokeBounce {
   0% { transform: translateY(0); }
   100% { transform: translateY(-6px); }
+}
+
+.poke-title {
+  display: inline-block;
+  opacity: 1; /* ensure visible */
+  animation:
+    bounceInOnce 0.8s ease-out forwards 0.2s,
+    pokeBounce 2s ease-in-out infinite alternate 1s;
 }
